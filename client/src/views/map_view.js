@@ -8,6 +8,7 @@ const MapView = function (container, options) {
   this.directionsService = null;
   this.directionsRenderer = null;
   this.markers = [];
+  this.route = null;
 };
 
 MapView.prototype.render = function () {
@@ -59,10 +60,32 @@ MapView.prototype.calcRoute = function(start, end) {
       console.log(this.directionsRenderer);
       this.directionsRenderer.setDirections(result);
       console.log(result);
+      this.route = this.getRouteData(result);
     }
   });
+
 };
 
 
+MapView.prototype.getRouteData = function (result) {
+  // console.log('distance');
+  // console.log(result.routes[0].legs[0].distance.text);
+  // console.log('start');
+  // console.log(result.routes[0].legs[0].start_location.lng());
+  // console.log(result.routes[0].legs[0].start_location.lat());
+  // console.log('end');
+  // console.log(result.routes[0].legs[0].end_location.lng());
+  // console.log(result.routes[0].legs[0].end_location.lat());
+  // console.log(result.routes[0].legs[0].duration.text);
+  const routeData = result.routes[0].legs[0];
+  const routeDataObject = {
+    start: {lat: routeData.start_location.lat(), lng: routeData.start_location.lng()},
+    end: {lat: routeData.end_location.lat(), lng: routeData.end_location.lng()},
+    distance: routeData.distance.text,
+    duration: routeData.duration.text
+  };
+  console.log(routeDataObject);
+return routeDataObject;
+};
 
 module.exports = MapView;
