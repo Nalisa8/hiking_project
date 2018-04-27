@@ -12,7 +12,7 @@ const appStart = function() {
   const mapView = new MapView(mapContainer, mapOptions);
 
   mapView.render();
-  // mapView.addMarkerOnClick();
+
 };
 
 
