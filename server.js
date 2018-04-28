@@ -2,6 +2,7 @@ const express = require('express');
 const server = express();
 const path = require('path')
 const parser = require('body-parser');
+
 // const WishListController = require('./server/controllers/wishlist_controller.js');
 
 
@@ -30,23 +31,28 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
   const completedCollection = db.collection('completedlist');
 
   server.post('/wishlist', function(req, res){
-
     const newRoute = req.body;
-
     wishListCollection.save(newRoute, function(err, result){
       if(err){
         console.error(err);
         res.status(500);
         res.send();
       }
-
       console.log('Saved!');
       res.status(201);
       res.json(result.ops[0]);
-
     });
   });
 
+  server.get('/wishlist', function (req, res) {
+    wishListCollection.find().toArray(function (err, allRoutes){
+      if(err){
+        res.status = 500;
+        res.send();
+      }
+      res.json(allRoutes);
+    });
+  });
 
 server.listen(3000, function () {
   console.log(`App listening on port ${this.address().port}`);

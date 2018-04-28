@@ -68,15 +68,6 @@ MapView.prototype.calcRoute = function(start, end) {
 
 
 MapView.prototype.getRouteData = function (result) {
-  // console.log('distance');
-  // console.log(result.routes[0].legs[0].distance.text);
-  // console.log('start');
-  // console.log(result.routes[0].legs[0].start_location.lng());
-  // console.log(result.routes[0].legs[0].start_location.lat());
-  // console.log('end');
-  // console.log(result.routes[0].legs[0].end_location.lng());
-  // console.log(result.routes[0].legs[0].end_location.lat());
-  // console.log(result.routes[0].legs[0].duration.text);
   const routeData = result.routes[0].legs[0];
   const routeDataObject = {
     start: {lat: routeData.start_location.lat(), lng: routeData.start_location.lng()},
