@@ -40,6 +40,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
       }
       console.log('Saved!');
       res.status(201);
+      console.log(result);
       res.json(result.ops[0]);
     });
   });
@@ -47,10 +48,38 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
   server.get('/wishlist', function (req, res) {
     wishListCollection.find().toArray(function (err, allRoutes){
       if(err){
-        res.status = 500;
+        res.status(500);
         res.send();
       }
       res.json(allRoutes);
+    });
+  });
+
+  // DELETE BY ID
+  server.delete('/wishlist/:id', function(req, res) {
+    const id = req.params.id;
+    const objectID = ObjectID(id);
+
+    wishListCollection.deleteOne({ _id: objectID}, function(err, result) {
+      if(err){
+        console.error(err);
+        res.status(500);
+        res.send();
+      }
+      res.status(204);
+      res.send();
+    })
+  })
+
+// DELETE ALL
+  server.delete('/wishlist', function ( req, res) {
+    wishListCollection.deleteMany({}, function(err, result) {
+      if (err){
+        console.error(err);
+        res.status(500);
+        res.send();
+      }
+      res.send();
     });
   });
 

@@ -4,31 +4,35 @@ const ListView = function (container, allData) {
 };
 
 ListView.prototype.renderList = function () {
+  console.log("wassssuuuppp");
   this.allData.forEach((routeObj) => {
     const routeItem = document.createElement('li');
-    renderDetail(routeObj, routeItem);
+    this.renderDetail(routeObj, routeItem);
     this.container.appendChild(routeItem);
   });
 };
 
 ListView.prototype.renderDetail = function (routeObj, routeItem) {
+
+  console.log(routeObj);
   const startLat = document.createElement('p');
-  startLat.textContent = "Start Lat:" + routeItem.start.lat;
+  startLat.textContent = "Start Lat:" + routeObj.start.lat;
+
 
   const startLng = document.createElement('p');
-  startLng.textContent = "Start Lng:" + routeItem.start.lng;
+  startLng.textContent = "Start Lng:" + routeObj.start.lng;
 
   const endLat = document.createElement('p');
-  endLat.textContent = "End Lat:" + routeItem.end.lat;
+  endLat.textContent = "End Lat:" + routeObj.end.lat;
 
   const endLng = document.createElement('p');
-  endLng.textContent = "End Lng:" + routeItem.end.lng;
+  endLng.textContent = "End Lng:" + routeObj.end.lng;
 
   const distance = document.createElement('p');
-  distance.textContent = "Distance:" + routeItem.distance;
+  distance.textContent = "Distance:" + routeObj.distance;
 
   const duration = document.createElement('p');
-  duration.textContent = "Duration:" + routeItem.duration;
+  duration.textContent = "Duration:" + routeObj.duration;
 
   routeItem.appendChild(startLat)
   routeItem.appendChild(startLng)

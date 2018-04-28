@@ -18,7 +18,6 @@ MapView.prototype.render = function () {
     this.directionsService = new this.google.maps.DirectionsService();
     this.directionsRenderer = new this.google.maps.DirectionsRenderer();
     this.addMarkerOnClick();
-    console.log(this.directionsService);
     this.directionsRenderer.setMap(this.googleMap);
   });
 };
@@ -57,9 +56,7 @@ MapView.prototype.calcRoute = function(start, end) {
 
   this.directionsService.route(request, (result, status) => {
     if (status == 'OK') {
-      console.log(this.directionsRenderer);
       this.directionsRenderer.setDirections(result);
-      console.log(result);
       this.route = this.getRouteData(result);
     }
   });
@@ -75,7 +72,6 @@ MapView.prototype.getRouteData = function (result) {
     distance: routeData.distance.text,
     duration: routeData.duration.text
   };
-  console.log(routeDataObject);
 return routeDataObject;
 };
 

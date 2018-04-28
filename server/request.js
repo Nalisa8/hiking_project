@@ -8,7 +8,7 @@ Request.prototype.get = function (onComplete) {
   request.addEventListener('load', function () {
     if (request.status !== 200) return;
 
-    const respone = JSON.parse(request.responseText);
+    const response = JSON.parse(request.responseText);
     onComplete(response);
   });
   request.send();
@@ -27,6 +27,27 @@ Request.prototype.post = function (onComplete, payload) {
     });
     const jsonPayload = JSON.stringify(payload);
     request.send(jsonPayload);
+};
+
+Request.prototype.deleteAll = function (onComplete) {
+  const request = new XMLHttpRequest();
+  request.open('DELETE', this.url);
+
+  request.addEventListener('load', function(){
+    if (request.status !==200) return;
+    onComplete();
+  })
+  request.send();
+};
+
+Request.prototype.deleteOne = function (onComplete) {
+  const request = new XMLHttpRequest();
+  request.open('DELETE', this.url);
+  request.addEventListener('load', function (){
+    if (request.status !== 204) return;
+    onComplete();
+  });
+  request.send();
 };
 
 module.exports = Request;

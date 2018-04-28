@@ -15,12 +15,12 @@ const appStart = function() {
   const mapView = new MapView(mapContainer, mapOptions);
   mapView.render();
 
-  const wishListRequest = new Request('http//:localhost:3000/wishlist');
-
+  const wishListRequest = new Request('/wishlist');
   wishListRequest.get((data) => {
-    const wishlistContainer = document.questSelector('#wishlist')
+    console.log(data);
+    const wishlistContainer = document.querySelector('#wishlist')
     const wishlistView = new ListView(wishlistContainer, data);
-    wishListView.renderList();
+    wishlistView.renderList();
   });
 
 
