@@ -28,7 +28,6 @@ MapView.prototype.addMarker = function (coords) {
     map: this.googleMap
   });
   this.markers.push(marker);
-
 };
 
 MapView.prototype.addMarkerOnClick = function () {
@@ -47,26 +46,25 @@ MapView.prototype.addMarkerOnClick = function () {
   });
 };
 
-MapView.prototype.calcRoute = function(start, end) {
+MapView.prototype.calcRoute = function(start, end, inputName) {
   const request = {
     origin: start,
     destination: end,
     travelMode: 'WALKING'
   };
-
   this.directionsService.route(request, (result, status) => {
     if (status == 'OK') {
       this.directionsRenderer.setDirections(result);
-      this.route = this.getRouteData(result);
+      this.route = this.getRouteData(result, inputName);
     }
   });
-
 };
 
 
-MapView.prototype.getRouteData = function (result) {
+MapView.prototype.getRouteData = function (result, inputName) {
   const routeData = result.routes[0].legs[0];
   const routeDataObject = {
+    name: inputName,
     start: {lat: routeData.start_location.lat(), lng: routeData.start_location.lng()},
     end: {lat: routeData.end_location.lat(), lng: routeData.end_location.lng()},
     distance: routeData.distance.text,

@@ -15,6 +15,11 @@ const appStart = function() {
   const mapView = new MapView(mapContainer, mapOptions);
   mapView.render();
 
+  const inputName = document.querySelector('#route-name');
+  const saveButton = document.querySelector('#save-button');
+
+  
+
   const wishListRequest = new Request('/wishlist');
   wishListRequest.get((data) => {
     console.log(data);
