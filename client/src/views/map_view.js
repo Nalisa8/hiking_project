@@ -33,16 +33,22 @@ MapView.prototype.addMarker = function (coords) {
 MapView.prototype.addMarkerOnClick = function () {
   this.googleMap.addListener('click', (event) => {
     this.addMarker(event.latLng);
-    // console.log(this.markers[0].latLng());
-    // console.log(this.markers[0].position.lng());
-    this.calcRoute(
-      { lat: this.markers[0].position.lat(),
-        lng: this.markers[0].position.lng()
-      },
-      { lat: this.markers[1].position.lat(),
-        lng: this.markers[1].position.lng()
-      }
-    );
+    const noOfMarkers = this.markers;
+
+    console.log(noOfMarkers.length);
+    if(this.markers.length < 2) {
+      return;
+
+    } else {
+      this.calcRoute(
+        { lat: this.markers[0].position.lat(),
+          lng: this.markers[0].position.lng()
+        },
+        { lat: this.markers[1].position.lat(),
+          lng: this.markers[1].position.lng()
+        }
+      );
+    };
   });
 };
 
@@ -70,7 +76,7 @@ MapView.prototype.getRouteData = function (result, inputName) {
     distance: routeData.distance.text,
     duration: routeData.duration.text
   };
-return routeDataObject;
+  return routeDataObject;
 };
 
 module.exports = MapView;

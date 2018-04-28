@@ -5,6 +5,13 @@ const Request = require('../../server/request.js');
 
 
 const appStart = function() {
+  const wishListRequest = new Request('/wishlist');
+  wishListRequest.get((data) => {
+    const wishlistContainer = document.querySelector('#wishlist')
+    const wishlistView = new ListView(wishlistContainer, data);
+    wishlistView.renderList();
+  });
+
   const mapContainer = document.querySelector('#map');
 
   const mapOptions = {
@@ -15,25 +22,27 @@ const appStart = function() {
   const mapView = new MapView(mapContainer, mapOptions);
   mapView.render();
 
+  console.log(mapView.route);
+
   const form = document.querySelector('#route-name');
   const saveButton = document.querySelector('#save-button');
 
   const handleFormSubmit = function (event) {
     event.preventDefault();
-    console.log(this.name.value);
     const routeName = this.name.value;
+    mapView.route["name"] = routeName;
+    wishListRequest.post(renderAllRoutes, mapView.route);
   }
 
   form.addEventListener('submit', handleFormSubmit);
 
-
-  const wishListRequest = new Request('/wishlist');
+  const renderAllRoutes = function(route) {
   wishListRequest.get((data) => {
     const wishlistContainer = document.querySelector('#wishlist')
     const wishlistView = new ListView(wishlistContainer, data);
     wishlistView.renderList();
   });
-
+};
 
 };
 

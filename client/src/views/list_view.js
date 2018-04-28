@@ -4,7 +4,6 @@ const ListView = function (container, allData) {
 };
 
 ListView.prototype.renderList = function () {
-  console.log("wassssuuuppp");
   this.allData.forEach((routeObj) => {
     const routeItem = document.createElement('li');
     this.renderDetail(routeObj, routeItem);
@@ -14,10 +13,12 @@ ListView.prototype.renderList = function () {
 
 ListView.prototype.renderDetail = function (routeObj, routeItem) {
 
-  console.log(routeObj);
+  console.log(routeObj.name);
+  const name = document.createElement('p');
+  name.textContent = "Route Name:" + routeObj.name;
+
   const startLat = document.createElement('p');
   startLat.textContent = "Start Lat:" + routeObj.start.lat;
-
 
   const startLng = document.createElement('p');
   startLng.textContent = "Start Lng:" + routeObj.start.lng;
@@ -34,6 +35,7 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
   const duration = document.createElement('p');
   duration.textContent = "Duration:" + routeObj.duration;
 
+  routeItem.appendChild(name);
   routeItem.appendChild(startLat)
   routeItem.appendChild(startLng)
   routeItem.appendChild(endLat)
