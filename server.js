@@ -1,17 +1,36 @@
-var express = require('express');
-var app = express();
-var path = require('path')
+const express = require('express');
+const server = express();
+const path = require('path')
+const parser = require('body-parser');
 
-app.get('/', function (req, res) {
+server.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/client/public/index.html'));
 });
 
-app.use(express.static('client/public'));
+server.use(parser.json());
+server.use(express.static('client/public'));
+
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 
 
-var server = app.listen(3000, function () {
-  var host = server.address().address;
-  var port = server.address().port;
+MongoClient.connect('mongodb://localhost:27017', function(err, client){
+  if(err){
+    console.error(err);
+    return;
+  }
+  const db = client.db('hiking_routes');
+  console.log('Connected to DB');
+  const wishListCollection = db.collection('wishlist');
 
-  console.log('Example app listening at http://%s:%s', host, port);
+  const completedCollection = db.collection('completedlist');
+
+
+
+});
+
+server.listen(3000, function () {
+
+
+  console.log(`App listening on port ${this.address().port}`);
 });
