@@ -15,14 +15,20 @@ const appStart = function() {
   const mapView = new MapView(mapContainer, mapOptions);
   mapView.render();
 
-  const inputName = document.querySelector('#route-name');
+  const form = document.querySelector('#route-name');
   const saveButton = document.querySelector('#save-button');
 
-  
+  const handleFormSubmit = function (event) {
+    event.preventDefault();
+    console.log(this.name.value);
+    const routeName = this.name.value;
+  }
+
+  form.addEventListener('submit', handleFormSubmit);
+
 
   const wishListRequest = new Request('/wishlist');
   wishListRequest.get((data) => {
-    console.log(data);
     const wishlistContainer = document.querySelector('#wishlist')
     const wishlistView = new ListView(wishlistContainer, data);
     wishlistView.renderList();
