@@ -3,7 +3,6 @@ const MapView = require('./views/map_view.js');
 const ListView = require('./views/list_view.js');
 const Request = require('../../server/request.js');
 
-
 const appStart = function() {
 
   const wishListRequest = new Request('/wishlist');
@@ -33,10 +32,7 @@ const appStart = function() {
       wishlistView.getDataThenRenderList();
     }, mapView.route);
   };
-
   form.addEventListener('submit', handleFormSubmit);
-
-
 };
 
 document.addEventListener('DOMContentLoaded', appStart);
