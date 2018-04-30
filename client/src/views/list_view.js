@@ -30,6 +30,24 @@ ListView.prototype.onDeleteButtonClicked = function(deleteButton) {
   });
 }
 
+ListView.prototype.onCompletedButtonClicked = function (completedButton) {
+
+  const oldRequest = `${this.request.url}`
+  const findRequest = `${this.request.url}/${completedButton.target.value}`
+  this.request.url = findRequest;
+  this.request.get((found) => {
+    this.request.url = "/completed";
+    this.request.post((foundTwo)=> {
+      this.getDataThenRenderList();
+    },found)
+
+      this.request.url = `/wishlist`;
+      this.onDeleteButtonClicked(completedButton);
+  });
+
+};
+
+
 ListView.prototype.renderDetail = function (routeObj, routeItem) {
 
   const deleteButton = document.createElement('button');
@@ -49,6 +67,7 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
   completedButton.addEventListener('click', (completedButton) => {
     this.onCompletedButtonClicked(completedButton);
   });
+
 
   const name = document.createElement('p');
   name.textContent = "Route Name:" + routeObj.name;

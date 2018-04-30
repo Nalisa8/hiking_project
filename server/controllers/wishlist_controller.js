@@ -23,7 +23,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
 
     const newRoute = req.body;
 
-    wishListCollection.save(newRoute, function(err, result){
+    wishListCollection.insertOne(newRoute, function(err, result){
       if(err){
         console.error(err);
         res.status(500);
@@ -47,6 +47,22 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
       res.json(allRoutes);
     });
   });
+
+// FIND BY ID
+wishListRouter.get('/:id', function(req, res){
+  const id = req.params.id;
+  const objectID = ObjectID(id);
+
+  wishListCollection.findOne({ _id: objectID}, function(err, result) {
+    if(err){
+      console.error(err);
+      res.status(500);
+      res.send();
+    }
+    res.send(result);
+  })
+});
+
 
   // DELETE BY ID
   wishListRouter.delete('/:id', function(req, res) {
