@@ -40,6 +40,16 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
     this.onDeleteButtonClicked(deleteButton);
   });
 
+  const completedButton = document.createElement('button');
+  completedButton.textContent = "Completed";
+  completedButton.value = routeObj._id;
+  completedButton.className = "completed-button";
+
+
+  completedButton.addEventListener('click', (completedButton) => {
+    this.onCompletedButtonClicked(completedButton);
+  });
+
   const name = document.createElement('p');
   name.textContent = "Route Name:" + routeObj.name;
 
@@ -62,6 +72,7 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
   duration.textContent = "Duration:" + routeObj.duration;
 
   routeItem.appendChild(deleteButton);
+  routeItem.appendChild(completedButton);
   routeItem.appendChild(name);
   routeItem.appendChild(startLat);
   routeItem.appendChild(startLng);
@@ -71,5 +82,18 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
   routeItem.appendChild(duration);
 };
 
+// ListView.prototype.renderWishlistDetail = function (routeObj, routeItem) {
+//   this.renderDetail(routeObj, routeItem);
+//
+//   const completedButton = document.createElement('button');
+//   completedButton.textContent = "Completed";
+//   completedButton.value = routeObj._id;
+//
+//   completedButton.addEventListener('click', (completedButton) => {
+//     this.onCompletedButtonClicked(completedButton);
+//   });
+//
+//   routeItem.appendChild(completedButton);
+// };
 
 module.exports = ListView;

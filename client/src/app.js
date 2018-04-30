@@ -9,7 +9,15 @@ const appStart = function() {
   const wishlistContainer = document.querySelector('#wishlist')
   const wishlistView = new ListView(wishlistContainer, wishListRequest);
 
-  wishlistView.getDataThenRenderList();
+  wishlistView.getDataThenRenderList(true);
+
+  console.log(wishlistView.container.id);
+
+  const completedRequest = new Request('/completed');
+  const completedContainer = document.querySelector('#completed-list')
+  const completedView = new ListView(completedContainer, completedRequest);
+
+  completedView.getDataThenRenderList(false);
 
   const mapContainer = document.querySelector('#map');
 
@@ -29,7 +37,7 @@ const appStart = function() {
     const routeName = this.name.value;
     mapView.route["name"] = routeName;
     wishListRequest.post((routeAdded) => {
-      wishlistView.getDataThenRenderList();
+      wishlistView.getDataThenRenderList(true);
     }, mapView.route);
   };
   form.addEventListener('submit', handleFormSubmit);
