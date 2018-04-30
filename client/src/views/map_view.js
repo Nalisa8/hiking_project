@@ -35,7 +35,6 @@ MapView.prototype.addMarkerOnClick = function () {
     this.addMarker(event.latLng);
     const noOfMarkers = this.markers;
 
-    console.log(noOfMarkers.length);
     if(this.markers.length < 2) {
       return;
 

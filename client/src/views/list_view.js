@@ -1,19 +1,27 @@
-const ListView = function (container, allData) {
+const ListView = function (container, request) {
   this.container = container;
-  this.allData = allData;
+  this.request = request;
 };
 
-ListView.prototype.renderList = function () {
-  this.allData.forEach((routeObj) => {
+
+ListView.prototype.getDataThenRenderList = function () {
+  this.request.get((data) => {
+    this.renderList(data);
+  });
+};
+
+ListView.prototype.renderList = function (data) {
+  console.log(data);
+  data.forEach((routeObj) => {
     const routeItem = document.createElement('li');
     this.renderDetail(routeObj, routeItem);
     this.container.appendChild(routeItem);
   });
 };
 
+
 ListView.prototype.renderDetail = function (routeObj, routeItem) {
 
-  console.log(routeObj.name);
   const name = document.createElement('p');
   name.textContent = "Route Name:" + routeObj.name;
 

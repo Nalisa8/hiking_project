@@ -5,12 +5,12 @@ const Request = require('../../server/request.js');
 
 
 const appStart = function() {
+
   const wishListRequest = new Request('/wishlist');
-  wishListRequest.get((data) => {
-    const wishlistContainer = document.querySelector('#wishlist')
-    const wishlistView = new ListView(wishlistContainer, data);
-    wishlistView.renderList();
-  });
+  const wishlistContainer = document.querySelector('#wishlist')
+  const wishlistView = new ListView(wishlistContainer, wishListRequest);
+
+  wishlistView.getDataThenRenderList();
 
   const mapContainer = document.querySelector('#map');
 
@@ -22,8 +22,6 @@ const appStart = function() {
   const mapView = new MapView(mapContainer, mapOptions);
   mapView.render();
 
-  console.log(mapView.route);
-
   const form = document.querySelector('#route-name');
   const saveButton = document.querySelector('#save-button');
 
@@ -31,18 +29,13 @@ const appStart = function() {
     event.preventDefault();
     const routeName = this.name.value;
     mapView.route["name"] = routeName;
-    wishListRequest.post(renderAllRoutes, mapView.route);
-  }
+    wishListRequest.post((routeAdded) => {
+      wishlistView.getDataThenRenderList();
+    }, mapView.route);
+  };
 
   form.addEventListener('submit', handleFormSubmit);
 
-  const renderAllRoutes = function(route) {
-  wishListRequest.get((data) => {
-    const wishlistContainer = document.querySelector('#wishlist')
-    const wishlistView = new ListView(wishlistContainer, data);
-    wishlistView.renderList();
-  });
-};
 
 };
 
