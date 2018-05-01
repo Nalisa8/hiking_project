@@ -3,9 +3,14 @@ const MapView = require('./views/map_view.js');
 const ListView = require('./views/wishlist_view.js');
 const Request = require('../../server/request.js');
 const ListData = require('./models/list_data.js');
+const StatsView = require('./views/stats_view.js');
 
 
 const appStart = function() {
+  const routeStatsContainer = document.querySelector('#stats-list');
+  const statsView = new StatsView(routeStatsContainer);
+
+  statsView.renderRouteStats();
 
   const wishlistHandler = new ListData('/wishlist');
   const wishlistContainer = document.querySelector('#wishlist')
@@ -43,7 +48,6 @@ const appStart = function() {
 
   const handleFormSubmit = function (event) {
     event.preventDefault();
-
     const routeName = this.name.value;
     mapView.route["name"] = routeName;
 
@@ -56,6 +60,7 @@ const appStart = function() {
     mapView.render();
     form.reset();
   };
+
   form.addEventListener('submit', handleFormSubmit);
 };
 

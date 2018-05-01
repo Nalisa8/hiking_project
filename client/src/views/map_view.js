@@ -1,4 +1,5 @@
 const GoogleMaps = require('google-maps');
+const StatsView = require('./stats_view.js');
 
 const MapView = function (container, options) {
   this.container = container;
@@ -16,14 +17,13 @@ MapView.prototype.render = function () {
     this.google = google;
     this.googleMap = new this.google.maps.Map(this.container, this.options);
     this.directionsService = new this.google.maps.DirectionsService();
-    this.directionsRenderer = new this.google.maps.DirectionsRenderer();
+    this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
     this.addMarkerOnClick();
     this.directionsRenderer.setMap(this.googleMap);
   });
 };
 
 MapView.prototype.addMarker = function (coords) {
-  console.log(this.markers.length);
   if(this.markers.length >= 2) {
     return;}
   const marker = new this.google.maps.Marker({
@@ -38,9 +38,9 @@ MapView.prototype.addMarker = function (coords) {
 MapView.prototype.addMarkerOnClick = function () {
   this.googleMap.addListener('click', (event) => {
     this.addMarker(event.latLng);
-    const noOfMarkers = this.markers;
-
-
+    if(this.markers.length < 2) {
+      return;
+    };
 
     this.calcRoute(
       { lat: this.markers[0].position.lat(),
@@ -56,13 +56,8 @@ MapView.prototype.addMarkerOnClick = function () {
 
 MapView.prototype.removeMarkerOnClick = function(marker) {
   google.maps.event.addListener(marker, 'click', (event) => {
-    console.log('marker clicked');
-    console.log('before', this.markers);
-    this.markers = this.markers.filter(dummy => dummy !== marker);
-    console.log('after', this.markers);
+    this.markers = this.markers.filter(dummyMarker => dummyMarker !== marker);
     marker.setMap(null);
-
-    // this.googleMap.setMapOnAll(null);
   });
 };
 
@@ -76,7 +71,7 @@ MapView.prototype.calcRoute = function(start, end, inputName) {
     if (status == 'OK') {
       this.directionsRenderer.setDirections(result);
       this.route = this.getRouteData(result, inputName);
-    }
+    };
   });
 };
 
@@ -90,6 +85,9 @@ MapView.prototype.getRouteData = function (result, inputName) {
     distance: routeData.distance.text,
     duration: routeData.duration.text
   };
+  const routeStatsContainer = document.querySelector('#stats-list');
+  const statsView = new StatsView(routeStatsContainer);
+  statsView.renderRouteStats(routeDataObject);
   return routeDataObject;
 };
 
