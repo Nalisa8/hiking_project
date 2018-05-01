@@ -26,7 +26,7 @@ const appStart = function() {
   };
 
   getDataThenRenderLists();
-  
+
   const mapContainer = document.querySelector('#map');
 
   const mapOptions = {
@@ -36,6 +36,7 @@ const appStart = function() {
 
   const mapView = new MapView(mapContainer, mapOptions);
   mapView.render();
+
 
   const form = document.querySelector('#route-name');
   const saveButton = document.querySelector('#save-button');

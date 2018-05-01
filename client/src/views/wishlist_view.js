@@ -75,25 +75,25 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
 
 
   const name = document.createElement('p');
-  name.textContent = "Route Name:" + routeObj.name;
+  name.textContent = routeObj.name;
 
   const startLat = document.createElement('p');
-  startLat.textContent = "Start Lat:" + routeObj.start.lat;
+  startLat.textContent = routeObj.start.lat;
 
   const startLng = document.createElement('p');
-  startLng.textContent = "Start Lng:" + routeObj.start.lng;
+  startLng.textContent = routeObj.start.lng;
 
   const endLat = document.createElement('p');
-  endLat.textContent = "End Lat:" + routeObj.end.lat;
+  endLat.textContent = routeObj.end.lat;
 
   const endLng = document.createElement('p');
-  endLng.textContent = "End Lng:" + routeObj.end.lng;
+  endLng.textContent = routeObj.end.lng;
 
   const distance = document.createElement('p');
-  distance.textContent = "Distance:" + routeObj.distance;
+  distance.textContent = routeObj.distance;
 
   const duration = document.createElement('p');
-  duration.textContent = "Duration:" + routeObj.duration;
+  duration.textContent = routeObj.duration;
 
   routeItem.appendChild(deleteButton);
   routeItem.appendChild(completedButton);

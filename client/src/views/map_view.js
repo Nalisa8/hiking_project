@@ -23,11 +23,16 @@ MapView.prototype.render = function () {
 };
 
 MapView.prototype.addMarker = function (coords) {
+  console.log(this.markers.length);
+  if(this.markers.length >= 2) {
+    return;}
   const marker = new this.google.maps.Marker({
     position: coords,
     map: this.googleMap
   });
   this.markers.push(marker);
+  this.removeMarkerOnClick(marker);
+  this.markers.forEach((marker) => console.log(marker));
 };
 
 MapView.prototype.addMarkerOnClick = function () {
@@ -35,19 +40,29 @@ MapView.prototype.addMarkerOnClick = function () {
     this.addMarker(event.latLng);
     const noOfMarkers = this.markers;
 
-    if(this.markers.length < 2) {
-      return;
 
-    } else {
-      this.calcRoute(
-        { lat: this.markers[0].position.lat(),
-          lng: this.markers[0].position.lng()
-        },
-        { lat: this.markers[1].position.lat(),
-          lng: this.markers[1].position.lng()
-        }
-      );
-    };
+
+    this.calcRoute(
+      { lat: this.markers[0].position.lat(),
+        lng: this.markers[0].position.lng()
+      },
+      { lat: this.markers[1].position.lat(),
+        lng: this.markers[1].position.lng()
+      }
+    );
+  });
+};
+
+
+MapView.prototype.removeMarkerOnClick = function(marker) {
+  google.maps.event.addListener(marker, 'click', (event) => {
+    console.log('marker clicked');
+    console.log('before', this.markers);
+    this.markers = this.markers.filter(dummy => dummy !== marker);
+    console.log('after', this.markers);
+    marker.setMap(null);
+
+    // this.googleMap.setMapOnAll(null);
   });
 };
 
