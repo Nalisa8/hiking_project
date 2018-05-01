@@ -58,10 +58,12 @@ const appStart = function() {
     }, mapView.route);
 
     mapView.render();
+    statsView.renderRouteStats();
     form.reset();
   };
 
   form.addEventListener('submit', handleFormSubmit);
+
 };
 
 document.addEventListener('DOMContentLoaded', appStart);
