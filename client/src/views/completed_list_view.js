@@ -11,7 +11,6 @@ ListView.prototype.getDataThenRenderList = function () {
 };
 
 ListView.prototype.renderList = function (data) {
-  console.log(data);
   this.container.innerHTML = "";
   data.forEach((routeObj) => {
     const routeItem = document.createElement('li');
@@ -26,17 +25,19 @@ ListView.prototype.onDeleteButtonClicked = function(deleteButton) {
   this.request.deleteOne(() => {
     this.request.url = oldRequest;
     this.getDataThenRenderList();
-    console.log(this);
   });
 }
 
 ListView.prototype.onCompletedButtonClicked = function (completedButton) {
+  const completedContainer = document.querySelector('#completed-list');
   const findRequest = `${this.request.url}/${completedButton.target.value}`;
   this.request.url = findRequest;
   this.request.get((found) => {
     delete found._id;
     this.request.url = '/completed';
     this.request.post((foundRoute)=> {
+      this.request.url = '/completed';
+      this.container = completedContainer;
       this.getDataThenRenderList();
     },found)
 
@@ -99,19 +100,5 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
   routeItem.appendChild(distance);
   routeItem.appendChild(duration);
 };
-
-// ListView.prototype.renderWishlistDetail = function (routeObj, routeItem) {
-//   this.renderDetail(routeObj, routeItem);
-//
-//   const completedButton = document.createElement('button');
-//   completedButton.textContent = "Completed";
-//   completedButton.value = routeObj._id;
-//
-//   completedButton.addEventListener('click', (completedButton) => {
-//     this.onCompletedButtonClicked(completedButton);
-//   });
-//
-//   routeItem.appendChild(completedButton);
-// };
 
 module.exports = ListView;

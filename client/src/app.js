@@ -1,24 +1,32 @@
 // const apiKey = AIzaSyBh5r8e1rHqG7LjFJVy3DrR0I4_GMaoPcA
 const MapView = require('./views/map_view.js');
-const ListView = require('./views/list_view.js');
+const ListView = require('./views/wishlist_view.js');
 const Request = require('../../server/request.js');
+const ListData = require('./models/list_data.js');
+
 
 const appStart = function() {
 
-  const wishListRequest = new Request('/wishlist');
+  const wishlistHandler = new ListData('/wishlist');
   const wishlistContainer = document.querySelector('#wishlist')
-  const wishlistView = new ListView(wishlistContainer, wishListRequest);
 
-  wishlistView.getDataThenRenderList(true);
+  const completedListHandler = new ListData('/completed');
+  const completedContainer = document.querySelector('#completed');
 
-  console.log(wishlistView.container.id);
+  const listView = new ListView(wishlistContainer, completedContainer);
 
-  const completedRequest = new Request('/completed');
-  const completedContainer = document.querySelector('#completed-list')
-  const completedView = new ListView(completedContainer, completedRequest);
+  const getDataThenRenderLists = function () {
+    wishlistHandler.getData((wishListData) => {
+      listView.wishlistData = wishListData;
+      completedListHandler.getData((completedData) => {
+        listView.completedData = completedData;
+        listView.renderBothLists();
+      });
+    });
+  };
 
-  completedView.getDataThenRenderList(false);
-
+  getDataThenRenderLists();
+  
   const mapContainer = document.querySelector('#map');
 
   const mapOptions = {
@@ -31,15 +39,19 @@ const appStart = function() {
 
   const form = document.querySelector('#route-name');
   const saveButton = document.querySelector('#save-button');
-  // const input = document.querySelector
 
   const handleFormSubmit = function (event) {
     event.preventDefault();
+
     const routeName = this.name.value;
     mapView.route["name"] = routeName;
-    wishListRequest.post((routeAdded) => {
-      wishlistView.getDataThenRenderList(true);
+
+    const request = new Request('/wishlist');
+
+    request.post((routeAdded) => {
+      getDataThenRenderLists();
     }, mapView.route);
+
     mapView.render();
     form.reset();
   };
