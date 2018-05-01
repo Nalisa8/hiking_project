@@ -31,13 +31,12 @@ ListView.prototype.onDeleteButtonClicked = function(deleteButton) {
 }
 
 ListView.prototype.onCompletedButtonClicked = function (completedButton) {
-
-  const oldRequest = `${this.request.url}`
-  const findRequest = `${this.request.url}/${completedButton.target.value}`
+  const findRequest = `${this.request.url}/${completedButton.target.value}`;
   this.request.url = findRequest;
   this.request.get((found) => {
-    this.request.url = "/completed";
-    this.request.post((foundTwo)=> {
+    delete found._id;
+    this.request.url = '/completed';
+    this.request.post((foundRoute)=> {
       this.getDataThenRenderList();
     },found)
 

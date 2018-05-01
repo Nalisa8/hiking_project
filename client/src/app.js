@@ -31,6 +31,7 @@ const appStart = function() {
 
   const form = document.querySelector('#route-name');
   const saveButton = document.querySelector('#save-button');
+  // const input = document.querySelector
 
   const handleFormSubmit = function (event) {
     event.preventDefault();
@@ -39,6 +40,8 @@ const appStart = function() {
     wishListRequest.post((routeAdded) => {
       wishlistView.getDataThenRenderList(true);
     }, mapView.route);
+    mapView.render();
+    form.reset();
   };
   form.addEventListener('submit', handleFormSubmit);
 };
