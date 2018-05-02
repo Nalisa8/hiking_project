@@ -62,7 +62,7 @@ h3 {
 /*///////////////////////////////////////////////*/
 /* styling table wishlist and completed list    */
 
-#completed-list .completed-button {
+#completed .completed-button {
   visibility: hidden;
 }
 

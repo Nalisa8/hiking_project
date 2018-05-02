@@ -14,6 +14,25 @@
     <div id="route-stats">
       <ul id="stats-list">
 
+        </ul>
+        <h4>Name Your Route</h4>
+        <form id="route-name" action="index.html" method="post">
+          <label>Name: </label>
+          <input type="text" id="name" required>
+          <button type="submit" name="save-route" id="save-route">Save Route</button>
+        </form>
+
+        <h4>Find Start Location</h4>
+        <form id="find-location" action="index.html" method="post">
+          <label>Location: </label>
+          <input type="text" id="start" required>
+          <button type="submit" name="start" id="find-start">Find Start</button>
+        </form>
+      </div>
+    </section>
+    <div id="map"></div>
+    <div id="elevation-chart"></div>
+
       </ul>
       <h4>Name Your Route</h4>
       <form id="route-name" action="index.html" method="post">
@@ -33,7 +52,7 @@
 
   <section id="completed-container">
     <h3>Completed Routes</h3>
-    <ul id="completed-list">
+    <ul id="completed">
     </ul>
   </section>
 

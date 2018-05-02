@@ -1,49 +1,82 @@
 // const apiKey = AIzaSyBh5r8e1rHqG7LjFJVy3DrR0I4_GMaoPcA
 const MapView = require('./views/map_view.js');
-const ListView = require('./views/list_view.js');
+const ListView = require('./views/wishlist_view.js');
 const Request = require('../../server/request.js');
+const ListData = require('./models/list_data.js');
+const StatsView = require('./views/stats_view.js');
+
 
 const appStart = function() {
+  const routeStatsContainer = document.querySelector('#stats-list');
+  const statsView = new StatsView(routeStatsContainer);
 
-  const wishListRequest = new Request('/wishlist');
+  statsView.renderRouteStats();
+
+  const wishlistHandler = new ListData('/wishlist');
   const wishlistContainer = document.querySelector('#wishlist')
-  const wishlistView = new ListView(wishlistContainer, wishListRequest);
 
-  wishlistView.getDataThenRenderList(true);
+  const completedListHandler = new ListData('/completed');
+  const completedContainer = document.querySelector('#completed');
 
-  console.log(wishlistView.container.id);
+  const listView = new ListView(wishlistContainer, completedContainer);
 
-  const completedRequest = new Request('/completed');
-  const completedContainer = document.querySelector('#completed-list')
-  const completedView = new ListView(completedContainer, completedRequest);
+  const getDataThenRenderLists = function () {
+    wishlistHandler.getData((wishListData) => {
+      listView.wishlistData = wishListData;
+      completedListHandler.getData((completedData) => {
+        listView.completedData = completedData;
+        listView.renderBothLists();
+      });
+    });
+  };
 
-  completedView.getDataThenRenderList(false);
+  getDataThenRenderLists();
 
   const mapContainer = document.querySelector('#map');
 
   const mapOptions = {
     zoom: 7,
-    center: {lat: 56.4907, lng: -4.2026}
+    center: {lat: 56.4907, lng: -4.2026},
+    mapTypeId: 'terrain'
   };
 
   const mapView = new MapView(mapContainer, mapOptions);
   mapView.render();
 
   const form = document.querySelector('#route-name');
-  const saveButton = document.querySelector('#save-button');
-  // const input = document.querySelector
+
+  const locationForm = document.querySelector('#find-location');
 
   const handleFormSubmit = function (event) {
     event.preventDefault();
     const routeName = this.name.value;
+    console.log(routeName);
+    console.log(this.name);
     mapView.route["name"] = routeName;
-    wishListRequest.post((routeAdded) => {
-      wishlistView.getDataThenRenderList(true);
+
+    const request = new Request('/wishlist');
+
+    request.post((routeAdded) => {
+      getDataThenRenderLists();
     }, mapView.route);
+
     mapView.render();
+    statsView.renderRouteStats();
     form.reset();
   };
+
+  const handleLocationFormSubmit = function (event) {
+    event.preventDefault();
+    const inputtedStart = this.start[0].value;
+    mapView.codeAddress(inputtedStart);
+    // mapView.render();
+    // form.reset();
+
+  };
+
   form.addEventListener('submit', handleFormSubmit);
+  locationForm.addEventListener('submit', handleLocationFormSubmit);
+
 };
 
 document.addEventListener('DOMContentLoaded', appStart);

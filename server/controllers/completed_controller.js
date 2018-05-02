@@ -37,7 +37,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
 
   completedRouter.get('/', function (req, res) {
     console.log(completedCollection);
-    completedCollection.find().toArray(function (err, allRoutes){
+    completedCollection.find().sort({_id:-1}).toArray(function (err, allRoutes){
       if(err){
         res.status(500);
         res.send();

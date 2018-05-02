@@ -17,8 +17,6 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
   console.log('Connected to DB');
   const wishListCollection = db.collection('wishlist');
 
-
-
   wishListRouter.post('/', function(req, res){
 
     const newRoute = req.body;
@@ -39,7 +37,7 @@ MongoClient.connect('mongodb://localhost:27017', function(err, client){
 
   wishListRouter.get('/', function (req, res) {
     console.log(wishListCollection);
-    wishListCollection.find().toArray(function (err, allRoutes){
+    wishListCollection.find().sort({_id:-1}).toArray(function (err, allRoutes){
       if(err){
         res.status(500);
         res.send();
