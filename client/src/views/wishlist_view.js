@@ -34,7 +34,6 @@ ListView.prototype.renderList = function (data, container) {
   });
 };
 
-
 ListView.prototype.onViewRouteButtonClicked = function(completeButton) {
   const request = new Request(`/${completeButton.path[2].id}/${completeButton.target.value}`);
   request.get((result) => {
@@ -107,20 +106,18 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
   const name = document.createElement('p');
   name.textContent = routeObj.name;
 
-  console.log(routeObj.distance);
-
   const startLat = document.createElement('p');
 
   startLat.textContent = utilities.prettifyLatOrLng(routeObj.start.lat);
 
   const startLng = document.createElement('p');
-  startLng.textContent = utilities.prettifyLatOrLng(routeObj.start.lng, 3);
+  startLng.textContent = utilities.prettifyLatOrLng(routeObj.start.lng);
 
   const endLat = document.createElement('p');
-  endLat.textContent = utilities.prettifyLatOrLng(routeObj.end.lat, 3);
+  endLat.textContent = utilities.prettifyLatOrLng(routeObj.end.lat);
 
   const endLng = document.createElement('p');
-  endLng.textContent = utilities.prettifyLatOrLng(routeObj.end.lng, 3);
+  endLng.textContent = utilities.prettifyLatOrLng(routeObj.end.lng);
 
   const distance = document.createElement('p');
   distance.textContent = utilities.prettifyDistance(routeObj);

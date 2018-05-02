@@ -69,6 +69,7 @@ MapView.prototype.codeAddress = function(address) {
 };
 
 MapView.prototype.addMarker = function (coords) {
+  if(this.markers.length >= 10) { return };
     const marker = new this.google.maps.Marker({
       position: coords,
       map: this.googleMap,
@@ -83,18 +84,18 @@ MapView.prototype.addMarkerOnClick = function () {
       if(this.markers.length < 2) {
         return;
       };
-
     const lastMarker = this.markers[this.markers.length-1];
-      this.calcRoute(
-        { lat: this.markers[0].position.lat(),
-          lng: this.markers[0].position.lng()
-        },
-        { lat: lastMarker.position.lat(),
-          lng: lastMarker.position.lng()
-        },
-        this.waypoints
-      );
-
+    const start = {
+      lat: this.markers[0].position.lat(),
+      lng: this.markers[0].position.lng()
+    };
+    const end = {
+      lat: lastMarker.position.lat(),
+        lng: lastMarker.position.lng()
+    };
+    this.getWaypointMarkers();
+    this.convertWayPointsToLocation();
+    this.calcRoute(start, end, this.waypoints);
     });
 };
 
@@ -107,7 +108,7 @@ MapView.prototype.getWaypointMarkers = function () {
 
 MapView.prototype.convertWayPointsToLocation = function () {
   this.waypoints = [];
-  this.tempArray.map((marker) => {
+  this.tempArray.forEach((marker) => {
     this.waypoints.push({
       location: `${marker.position.lat()}, ${marker.position.lng()}`
     })
@@ -122,8 +123,8 @@ MapView.prototype.convertMarkersToLatLng = function () {
       lng: marker.position.lng()
     })
   })
+  console.log("markers as lat long",this.markersAsLatLng);
 };
-
 
   MapView.prototype.updateDirectPath = function () {
     const path = []
@@ -141,8 +142,7 @@ MapView.prototype.convertMarkersToLatLng = function () {
   };
 
   MapView.prototype.calcRoute = function(start, end, waypoints, inputName) {
-    this.getWaypointMarkers();
-    this.convertWayPointsToLocation();
+
     const request = {
       origin: start,
       destination: end,
@@ -182,8 +182,9 @@ MapView.prototype.convertMarkersToLatLng = function () {
   };
 
 MapView.prototype.getElevationAlongPath = function () {
+  
   this.elevationService.getElevationAlongPath({
-    'path': [{lat: 56.7530313, lng: -3.62624249}, {lat: 56.8515737, lng: -3.8889689}],
+    'path': this.markersAsLatLng,
     'samples': 256
   }, (elevations, status) => {
     this.plotElevation(elevations, status)
