@@ -1,27 +1,45 @@
 const GoogleMaps = require('google-maps');
 const StatsView = require('./stats_view.js');
 
-const MapView = function (container, options) {
+const GoogleCharts = require('google-charts').GoogleCharts;
+
+
+
+const MapView = function (container, elevationContainer, options) {
   this.container = container;
+  this.elevationContainer = elevationContainer;
   this.options = options;
   this.google = null;
+  this.googleCharts = null;
   this.googleMap = null;
   this.directionsService = null;
   this.directionsRenderer = null;
-  // this.elevationService = null;
+  this.elevationService = null;
+  this.elevationChart = null;
+  this.elevationData = null;
   this.markers = [];
   this.route = null;
 };
 
 MapView.prototype.render = function () {
-  GoogleMaps.load((google) => {
-    this.google = google;
-    this.googleMap = new this.google.maps.Map(this.container, this.options);
-    this.directionsService = new this.google.maps.DirectionsService();
-    this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
-    // this.elevationService = new this.google.maps.ElevationService();
-    this.addMarkerOnClick();
-    this.directionsRenderer.setMap(this.googleMap);
+  console.log(GoogleCharts);
+  GoogleCharts.load(() => {
+    console.log(GoogleCharts.api)
+
+    this.googleCharts = GoogleCharts.api;
+
+    GoogleMaps.load((google) => {
+      this.google = google;
+      this.googleMap = new this.google.maps.Map(this.container, this.options);
+      this.directionsService = new this.google.maps.DirectionsService();
+      this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
+      this.elevationChart = new this.googleCharts.visualization.ColumnChart(this.elevationContainer);
+      this.elevationService = new this.google.maps.ElevationService();
+      console.log(this.elevationContainer);
+      this.addMarkerOnClick();
+      this.directionsRenderer.setMap(this.googleMap);
+    });
+
   });
 };
 
@@ -52,6 +70,7 @@ MapView.prototype.addMarker = function (coords) {
           lng: this.markers[1].position.lng()
         }
       );
+      this.getElevationAlongPath();
     });
   };
 
@@ -70,7 +89,7 @@ MapView.prototype.addMarker = function (coords) {
       travelMode: 'WALKING'
     };
     this.directionsService.route(request, (result, status) => {
-      if (status == 'OK') {
+      if (status === 'OK') {
         this.directionsRenderer.setDirections(result);
         this.route = this.getRouteData(result, inputName);
       };
@@ -93,4 +112,32 @@ MapView.prototype.addMarker = function (coords) {
     return routeDataObject;
   };
 
-  module.exports = MapView;
+  MapView.prototype.getElevationAlongPath = function () {
+    this.elevationService.getElevationAlongPath({
+      'path': [{lat: 56.7530313, lng: -3.62624249}, {lat: 56.8515737, lng: -3.8889689}],
+      'samples': 256
+    }, (elevations, status) => {
+      this.plotElevation(elevations, status)
+    });
+  };
+
+  MapView.prototype.plotElevation = function (elevations, status) {
+    console.log(this.elevationContainer);
+    if (status !== 'OK') {
+      this.elevationContainer.innerHTML = 'Cannot show elevation: request failed because ' + status;
+      return;
+    }
+      this.elevationData = new this.googleCharts.visualization.DataTable();
+      this.elevationData.addColumn('string', 'Sample');
+      this.elevationData.addColumn('number', 'Elevation');
+      for (let i = 0; i < elevations.length; i++) {
+        this.elevationData.addRow(['', elevations[i].elevation]);
+      }
+      this.elevationChart.draw(this.elevationData, {
+        height: 150,
+        legend: 'none',
+        titleY: 'Elevation (m)'
+    });
+  };
+
+module.exports = MapView;
