@@ -1,15 +1,22 @@
 const GoogleMaps = require('google-maps');
 const StatsView = require('./stats_view.js');
 
-const MapView = function (container, options) {
+const GoogleCharts = require('google-charts').GoogleCharts;
+
+const MapView = function (container, elevationContainer, options) {
   this.container = container;
+  this.elevationContainer = elevationContainer;
   this.options = options;
   this.google = null;
+  this.googleCharts = null;
   this.googleMap = null;
   this.directionsService = null;
   this.directionsRenderer = null;
+  this.elevationService = null;
+  this.elevationChart = null;
+  this.elevationData = null;
   this.geocoder = null;
-  // this.elevationService = null;
+
   this.markers = [];
   this.route = null;
   this.geodesicPoly = null;
@@ -18,25 +25,33 @@ const MapView = function (container, options) {
 };
 
 MapView.prototype.render = function () {
-  GoogleMaps.load((google) => {
-    this.google = google;
-    this.googleMap = new this.google.maps.Map(this.container, this.options);
-    this.directionsService = new this.google.maps.DirectionsService();
-    this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
-    // this.elevationService = new this.google.maps.ElevationService();
-    this.geocoder = new this.google.maps.Geocoder();
-    this.addMarkerOnClick();
-    this.directionsRenderer.setMap(this.googleMap);
-    this.geodesicPoly = new google.maps.Polyline({
-         strokeColor: '#CC0099',
-         strokeOpacity: 1.0,
-         strokeWeight: 3,
-         geodesic: true,
-         map: this.googleMap
+  console.log(GoogleCharts);
+  GoogleCharts.load(() => {
+    console.log(GoogleCharts.api)
+
+    this.googleCharts = GoogleCharts.api;
+
+    GoogleMaps.load((google) => {
+      this.google = google;
+      this.googleMap = new this.google.maps.Map(this.container, this.options);
+      this.directionsService = new this.google.maps.DirectionsService();
+      this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
+      this.elevationChart = new this.googleCharts.visualization.ColumnChart(this.elevationContainer);
+      this.elevationService = new this.google.maps.ElevationService();
+      console.log(this.elevationContainer);
+      this.addMarkerOnClick();
+      this.directionsRenderer.setMap(this.googleMap);
+      this.geocoder = new this.google.maps.Geocoder();
+      this.geodesicPoly = new google.maps.Polyline({
+           strokeColor: '#CC0099',
+           strokeOpacity: 1.0,
+           strokeWeight: 3,
+           geodesic: true,
+           map: this.googleMap
+      });
     });
   });
-};
-
+}
 
 MapView.prototype.codeAddress = function(address) {
   this.geocoder.geocode({'address': address}, (results, status) => {
@@ -48,8 +63,6 @@ MapView.prototype.codeAddress = function(address) {
     }
   });
 };
-
-
 
 MapView.prototype.addMarker = function (coords) {
   // if(this.markers.length >= 2) {
@@ -81,6 +94,7 @@ MapView.prototype.addMarkerOnClick = function () {
         },
         this.waypoints
       );
+      this.getElevationAlongPath();
     });
 };
 
@@ -126,7 +140,7 @@ MapView.prototype.convertMarkersToLatLng = function () {
       travelMode: 'WALKING'
     };
     this.directionsService.route(request, (result, status) => {
-      if (status == 'OK') {
+      if (status === 'OK') {
         this.directionsRenderer.setDirections(result);
         this.route = this.getRouteData(result, inputName);
       };
@@ -155,21 +169,50 @@ MapView.prototype.convertMarkersToLatLng = function () {
     return routeDataObject;
   };
 
-  MapView.prototype.calculateTotalDistance = function (result) {
-    let totalDistance = 0;
-    result.routes[0].legs.forEach((leg) => {
-      totalDistance += (leg.distance.value);
-    });
-    return totalDistance;
-  };
+MapView.prototype.getElevationAlongPath = function () {
+  this.elevationService.getElevationAlongPath({
+    'path': [{lat: 56.7530313, lng: -3.62624249}, {lat: 56.8515737, lng: -3.8889689}],
+    'samples': 256
+  }, (elevations, status) => {
+    this.plotElevation(elevations, status)
+  });
+};
 
-  MapView.prototype.calculateTotalDuration = function (result) {
-    let totalDuration = 0;
-    result.routes[0].legs.forEach((leg) => {
-      totalDuration += (leg.duration.value);
-    });
-    return totalDuration;
-  };
+MapView.prototype.plotElevation = function (elevations, status) {
+  console.log(this.elevationContainer);
+  if (status !== 'OK') {
+    this.elevationContainer.innerHTML = 'Cannot show elevation: request failed because ' + status;
+    return;
+  }
+    this.elevationData = new this.googleCharts.visualization.DataTable();
+    this.elevationData.addColumn('string', 'Sample');
+    this.elevationData.addColumn('number', 'Elevation');
+    for (let i = 0; i < elevations.length; i++) {
+      this.elevationData.addRow(['', elevations[i].elevation]);
+    }
+    this.elevationChart.draw(this.elevationData, {
+      height: 150,
+      legend: 'none',
+      titleY: 'Elevation (m)'
+  });
+};
+
+MapView.prototype.calculateTotalDistance = function (result) {
+  let totalDistance = 0;
+  result.routes[0].legs.forEach((leg) => {
+    totalDistance += (leg.distance.value);
+  });
+  return totalDistance;
+};
+
+MapView.prototype.calculateTotalDuration = function (result) {
+  let totalDuration = 0;
+  result.routes[0].legs.forEach((leg) => {
+    totalDuration += (leg.duration.value);
+  });
+  return totalDuration;
+};
+
 
 MapView.prototype.convertWaypointsToLatLng = function () {
 

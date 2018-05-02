@@ -66,6 +66,11 @@ h3 {
   visibility: hidden;
 }
 
+#elevation-chart {
+  border: 1px solid black;
+  width: 700px;
+  height: 200px;
+}
 #wishlist-container {
   margin-left: inherit;
   margin-right:auto;

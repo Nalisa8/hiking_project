@@ -4,7 +4,7 @@ const ListView = require('./views/wishlist_view.js');
 const Request = require('../../server/request.js');
 const ListData = require('./models/list_data.js');
 const StatsView = require('./views/stats_view.js');
-
+const Elevation = require('./views/elevation_view.js');
 
 const appStart = function() {
   const routeStatsContainer = document.querySelector('#stats-list');
@@ -33,6 +33,7 @@ const appStart = function() {
   getDataThenRenderLists();
 
   const mapContainer = document.querySelector('#map');
+  const elevationContainer = document.querySelector('#elevation-chart');
 
   const mapOptions = {
     zoom: 7,
@@ -40,7 +41,7 @@ const appStart = function() {
     mapTypeId: 'terrain'
   };
 
-  const mapView = new MapView(mapContainer, mapOptions);
+  const mapView = new MapView(mapContainer, elevationContainer, mapOptions);
   mapView.render();
 
   const form = document.querySelector('#route-name');
