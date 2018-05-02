@@ -36,7 +36,8 @@ const appStart = function() {
 
   const mapOptions = {
     zoom: 7,
-    center: {lat: 56.4907, lng: -4.2026}
+    center: {lat: 56.4907, lng: -4.2026},
+    mapTypeId: 'terrain'
   };
 
   const mapView = new MapView(mapContainer, mapOptions);

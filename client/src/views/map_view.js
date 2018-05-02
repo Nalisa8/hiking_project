@@ -11,6 +11,7 @@ const MapView = function (container, options) {
   // this.elevationService = null;
   this.markers = [];
   this.route = null;
+  this.geodesicPoly = null;
 };
 
 MapView.prototype.render = function () {
@@ -22,6 +23,13 @@ MapView.prototype.render = function () {
     // this.elevationService = new this.google.maps.ElevationService();
     this.addMarkerOnClick();
     this.directionsRenderer.setMap(this.googleMap);
+    this.geodesicPoly = new google.maps.Polyline({
+         strokeColor: '#CC0099',
+         strokeOpacity: 1.0,
+         strokeWeight: 3,
+         geodesic: true,
+         map: this.googleMap
+       });
   });
 };
 
@@ -55,6 +63,10 @@ MapView.prototype.addMarker = function (coords) {
     });
   };
 
+  MapView.prototype.update = function () {
+    const path = [this.markers[0].getPosition(), this.markers[1].getPosition()];
+    this.geodesicPoly.setPath(path);
+  };
 
   MapView.prototype.removeMarkerOnClick = function(marker) {
     google.maps.event.addListener(marker, 'click', (event) => {
@@ -74,6 +86,7 @@ MapView.prototype.addMarker = function (coords) {
         this.directionsRenderer.setDirections(result);
         this.route = this.getRouteData(result, inputName);
       };
+      this.update();
     });
   };
 
