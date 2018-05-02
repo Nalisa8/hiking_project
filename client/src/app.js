@@ -43,13 +43,15 @@ const appStart = function() {
   const mapView = new MapView(mapContainer, mapOptions);
   mapView.render();
 
-
   const form = document.querySelector('#route-name');
-  const saveButton = document.querySelector('#save-button');
+
+  const locationForm = document.querySelector('#find-location');
 
   const handleFormSubmit = function (event) {
     event.preventDefault();
     const routeName = this.name.value;
+    console.log(routeName);
+    console.log(this.name);
     mapView.route["name"] = routeName;
 
     const request = new Request('/wishlist');
@@ -63,7 +65,17 @@ const appStart = function() {
     form.reset();
   };
 
+  const handleLocationFormSubmit = function (event) {
+    event.preventDefault();
+    const inputtedStart = this.start[0].value;
+    mapView.codeAddress(inputtedStart);
+    // mapView.render();
+    // form.reset();
+
+  };
+
   form.addEventListener('submit', handleFormSubmit);
+  locationForm.addEventListener('submit', handleLocationFormSubmit);
 
 };
 
