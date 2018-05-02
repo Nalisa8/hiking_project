@@ -5,7 +5,6 @@ const MapView = require('./map_view.js');
 const wishlistGetter = new ListData('/wishlist');
 const completedListGetter = new ListData('/completed');
 
-
 const ListView = function (containerOne, containerTwo) {
   this.wishlistContainer = containerOne;
   this.completedContainer = containerTwo;
