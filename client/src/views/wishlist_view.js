@@ -13,6 +13,12 @@ const ListView = function (containerOne, containerTwo) {
   this.completedData = null;
 };
 
+const precisionRound = function(number, precision) {
+  const factor = Math.pow(10, precision);
+  return Math.round(number * factor)/factor;
+};
+
+
 ListView.prototype.renderBothLists = function() {
   wishlistGetter.getData((data) => {
     this.wishlistData = data;
@@ -108,16 +114,16 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
   name.textContent = routeObj.name;
 
   const startLat = document.createElement('p');
-  startLat.textContent = routeObj.start.lat;
+  startLat.textContent = precisionRound(routeObj.start.lat, 3);
 
   const startLng = document.createElement('p');
-  startLng.textContent = routeObj.start.lng;
+  startLng.textContent = precisionRound(routeObj.start.lng, 3);
 
   const endLat = document.createElement('p');
-  endLat.textContent = routeObj.end.lat;
+  endLat.textContent = precisionRound(routeObj.end.lat, 3);
 
   const endLng = document.createElement('p');
-  endLng.textContent = routeObj.end.lng;
+  endLng.textContent = precisionRound(routeObj.end.lng, 3);
 
   const distance = document.createElement('p');
   distance.textContent = routeObj.distance;
