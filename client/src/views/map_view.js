@@ -16,7 +16,6 @@ const MapView = function (container, elevationContainer, options) {
   this.elevationChart = null;
   this.elevationData = null;
   this.geocoder = null;
-
   this.markers = [];
   this.route = null;
   this.geodesicPoly = null;
@@ -25,20 +24,13 @@ const MapView = function (container, elevationContainer, options) {
 };
 
 MapView.prototype.render = function () {
-  console.log(GoogleCharts);
-  GoogleCharts.load(() => {
-    console.log(GoogleCharts.api)
-
-    this.googleCharts = GoogleCharts.api;
-
     GoogleMaps.load((google) => {
       this.google = google;
+      this.renderElevationService();
       this.googleMap = new this.google.maps.Map(this.container, this.options);
       this.directionsService = new this.google.maps.DirectionsService();
+      console.log("In render log",this.directionsService);
       this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
-      this.elevationChart = new this.googleCharts.visualization.ColumnChart(this.elevationContainer);
-      this.elevationService = new this.google.maps.ElevationService();
-      console.log(this.elevationContainer);
       this.addMarkerOnClick();
       this.directionsRenderer.setMap(this.googleMap);
       this.geocoder = new this.google.maps.Geocoder();
@@ -50,8 +42,16 @@ MapView.prototype.render = function () {
            map: this.googleMap
       });
     });
-  });
 }
+
+MapView.prototype.renderElevationService = function () {
+  GoogleCharts.load(() => {
+
+  this.googleCharts = GoogleCharts.api;
+  this.elevationChart = new this.googleCharts.visualization.ColumnChart(this.elevationContainer);
+  this.elevationService = new this.google.maps.ElevationService();
+  });
+};
 
 MapView.prototype.codeAddress = function(address) {
   this.geocoder.geocode({'address': address}, (results, status) => {
@@ -179,7 +179,6 @@ MapView.prototype.getElevationAlongPath = function () {
 };
 
 MapView.prototype.plotElevation = function (elevations, status) {
-  console.log(this.elevationContainer);
   if (status !== 'OK') {
     this.elevationContainer.innerHTML = 'Cannot show elevation: request failed because ' + status;
     return;

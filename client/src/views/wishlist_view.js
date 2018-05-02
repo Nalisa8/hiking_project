@@ -48,11 +48,13 @@ ListView.prototype.onViewRouteButtonClicked = function(completeButton) {
       zoom: 7,
       center: {lat: 56.4907, lng: -4.2026}
     };
+    const elevationContainer = document.querySelector('#elevation-chart');
 
-    const mapView = new MapView(mapContainer, mapOptions);
+    const mapView = new MapView(mapContainer, elevationContainer, mapOptions);
     mapView.render();
-    console.log(result);
-    mapView.calcRoute(result.start, result.end, result.waypoints);
+
+    console.log("post render log", mapView.directionsService);
+    mapView.calcRoute(result.start, result.end, result.waypoints, result.name);
     mapView.addMarker(result.start);
     mapView.addMarker(result.end);
 
@@ -61,6 +63,7 @@ ListView.prototype.onViewRouteButtonClicked = function(completeButton) {
     //   mapView.addMarker(waypoint)
     // })
   });
+
 
 
 };

@@ -51,8 +51,6 @@ const appStart = function() {
   const handleFormSubmit = function (event) {
     event.preventDefault();
     const routeName = this.name.value;
-    console.log(routeName);
-    console.log(this.name);
     mapView.route["name"] = routeName;
 
     const request = new Request('/wishlist');
