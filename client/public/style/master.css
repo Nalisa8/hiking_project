@@ -1,8 +1,66 @@
+
+img {
+background-repeat: no-repeat;
+background-position: top;
+border: 0.1em solid grey;
+margin-bottom: 0em;
+}
+
+#lg2{
+  border: hidden;
+}
+
+div#hiking {
+  position: absolute; top: 45px;
+  font-style: normal;
+  font-family: "Didot", cursive;
+  font-size: 50px;
+  padding: 1em;
+  color: white;
+  margin-bottom: 2em;
+}
+
 #map {
-  border: 1px solid black;
+  border: 0.1em solid black;
   width: 700px;
   height: 500px;
+  margin-left: 2.5em;
+  margin-right: inherit;
+  margin-top: 2em;
+  display:inline-table;
+  border-spacing: 3em;
+  padding-top: 1em;
+  float: right;
+
 }
+
+#route-info {
+  border: 0.1em solid #b0b0b0;
+  width: 500px;
+  height: 500px;
+  background-color: #f4f1e8;
+  background-position: right;
+  padding-top: 1em;
+  margin-left: inherit;
+  margin-right:1em;
+  display:inline-table;
+  margin-top: 30px;
+}
+
+h3 {
+  font-style: normal;
+  background-color: #88c350;
+  /* background:; */
+  /* width: 26em; */
+  height: 2em;
+  opacity: 0.8;
+  text-align: center;
+  padding: 0.5em;
+  /* float: inherit; */
+    top: 104px;
+}
+/*///////////////////////////////////////////////*/
+/* styling table wishlist and completed list    */
 
 #completed .completed-button {
   visibility: hidden;
@@ -13,3 +71,48 @@
   width: 700px;
   height: 200px;
 }
+#wishlist-container {
+  margin-left: inherit;
+  margin-right:auto;
+  display:inline-table;
+  float:left;
+  position:static;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color:#f4f1e8;
+  margin-top: 25px;
+
+}
+
+#completed-container {
+  margin-left: inherit;
+  margin-right:auto;
+  display:inline-table;
+  border-spacing: 4em;
+  float: right;
+  position: static;
+  bottom: 300px;
+  left: 0px;
+  right: 100px;
+  background-color:#f4f1e8;
+  padding: 0em;
+}
+
+
+li {
+  display: inline-flex;
+  flex-wrap:wrap-reverse;
+  /* flex-direction: row; */
+  /* font-style:italic; */
+}
+
+
+p {
+width: 60px;
+}
+
+
+/* #completed-list .distance {
+  background: blue;
+} */

@@ -37,19 +37,22 @@ const appStart = function() {
 
   const mapOptions = {
     zoom: 7,
-    center: {lat: 56.4907, lng: -4.2026}
+    center: {lat: 56.4907, lng: -4.2026},
+    mapTypeId: 'terrain'
   };
 
   const mapView = new MapView(mapContainer, elevationContainer, mapOptions);
   mapView.render();
 
-
   const form = document.querySelector('#route-name');
-  const saveButton = document.querySelector('#save-button');
+
+  const locationForm = document.querySelector('#find-location');
 
   const handleFormSubmit = function (event) {
     event.preventDefault();
     const routeName = this.name.value;
+    console.log(routeName);
+    console.log(this.name);
     mapView.route["name"] = routeName;
 
     const request = new Request('/wishlist');
@@ -63,7 +66,17 @@ const appStart = function() {
     form.reset();
   };
 
+  const handleLocationFormSubmit = function (event) {
+    event.preventDefault();
+    const inputtedStart = this.start[0].value;
+    mapView.codeAddress(inputtedStart);
+    // mapView.render();
+    // form.reset();
+
+  };
+
   form.addEventListener('submit', handleFormSubmit);
+  locationForm.addEventListener('submit', handleLocationFormSubmit);
 
 };
 
