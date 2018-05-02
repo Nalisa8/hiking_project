@@ -101,8 +101,11 @@ MapView.prototype.convertMarkersToLatLng = function () {
 };
 
 
-  MapView.prototype.update = function () {
-    const path = [this.markers[0].getPosition(), this.markers[this.markers.length-1].getPosition()];
+  MapView.prototype.updateDirectPath = function () {
+    const path = []
+    this.markers.forEach((marker) => {
+      path.push(marker.getPosition())
+    })
     this.geodesicPoly.setPath(path);
   };
 
@@ -127,7 +130,7 @@ MapView.prototype.convertMarkersToLatLng = function () {
         this.directionsRenderer.setDirections(result);
         this.route = this.getRouteData(result, inputName);
       };
-      this.update();
+      this.updateDirectPath();
     });
   };
 
