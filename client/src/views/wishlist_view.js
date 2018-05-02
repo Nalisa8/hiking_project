@@ -51,9 +51,15 @@ ListView.prototype.onViewRouteButtonClicked = function(completeButton) {
 
     const mapView = new MapView(mapContainer, mapOptions);
     mapView.render();
-    mapView.calcRoute(result.start, result.end);
+    console.log(result);
+    mapView.calcRoute(result.start, result.end, result.waypoints);
     mapView.addMarker(result.start);
     mapView.addMarker(result.end);
+
+
+    // result.waypoints.forEach((waypoint) => {
+    //   mapView.addMarker(waypoint)
+    // })
   });
 
 

@@ -78,7 +78,8 @@ MapView.prototype.addMarkerOnClick = function () {
         },
         { lat: lastMarker.position.lat(),
           lng: lastMarker.position.lng()
-        }
+        },
+        this.waypoints
       );
     });
 };
@@ -94,8 +95,7 @@ MapView.prototype.convertMarkersToLatLng = function () {
   this.waypoints = [];
   this.tempArray.map((marker) => {
     this.waypoints.push({
-      location: `${marker.position.lat()}, ${marker.position.lng()}`,
-      stopover: true
+      location: `${marker.position.lat()}, ${marker.position.lng()}`
     })
   });
 };
@@ -116,13 +116,13 @@ MapView.prototype.convertMarkersToLatLng = function () {
     });
   };
 
-  MapView.prototype.calcRoute = function(start, end, inputName) {
+  MapView.prototype.calcRoute = function(start, end, waypoints, inputName) {
     this.getWaypointMarkers();
     this.convertMarkersToLatLng();
     const request = {
       origin: start,
       destination: end,
-      waypoints: this.waypoints,
+      waypoints: waypoints,
       travelMode: 'WALKING'
     };
     this.directionsService.route(request, (result, status) => {
@@ -131,21 +131,21 @@ MapView.prototype.convertMarkersToLatLng = function () {
         this.route = this.getRouteData(result, inputName);
       };
       this.updateDirectPath();
+      this.convertWaypointsToLatLng();
     });
   };
-
 
   MapView.prototype.getRouteData = function (result, inputName) {
     const startRouteData = result.routes[0].legs[0];
     const endRouteData = result.routes[0].legs.slice(-1).pop();
     const routeData = result.routes[0].legs[0];
-    console.log(result);
     let totalDistance = this.calculateTotalDistance(result);
     let totalDuration = this.calculateTotalDuration(result);
     const routeDataObject = {
       name: inputName,
       start: {lat: startRouteData.start_location.lat(), lng: startRouteData.start_location.lng()},
       end: {lat: endRouteData.end_location.lat(), lng: endRouteData.end_location.lng()},
+      waypoints: this.waypoints,
       distance: totalDistance,
       duration: totalDuration
     };
@@ -170,5 +170,9 @@ MapView.prototype.convertMarkersToLatLng = function () {
     });
     return totalDuration;
   };
+
+MapView.prototype.convertWaypointsToLatLng = function () {
+
+};
 
   module.exports = MapView;
