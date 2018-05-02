@@ -7,3 +7,14 @@
 #completed .completed-button {
   visibility: hidden;
 }
+
+li {
+  display: flex;
+  flex-wrap: nowrap;
+  /* padding: 100px; */
+}
+
+p {
+  /* padding: 20px; */
+  width: 75px;
+}

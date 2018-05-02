@@ -8,6 +8,7 @@ const MapView = function (container, options) {
   this.googleMap = null;
   this.directionsService = null;
   this.directionsRenderer = null;
+  this.geocoder = null;
   // this.elevationService = null;
   this.markers = [];
   this.route = null;
@@ -23,6 +24,7 @@ MapView.prototype.render = function () {
     this.directionsService = new this.google.maps.DirectionsService();
     this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
     // this.elevationService = new this.google.maps.ElevationService();
+    this.geocoder = new this.google.maps.Geocoder();
     this.addMarkerOnClick();
     this.directionsRenderer.setMap(this.googleMap);
     this.geodesicPoly = new google.maps.Polyline({
@@ -34,6 +36,20 @@ MapView.prototype.render = function () {
     });
   });
 };
+
+
+MapView.prototype.codeAddress = function(address) {
+  this.geocoder.geocode({'address': address}, (results, status) => {
+    if (status === 'OK') {
+      this.googleMap.setCenter(results[0].geometry.location);
+      this.googleMap.setZoom(10);
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+};
+
+
 
 MapView.prototype.addMarker = function (coords) {
   // if(this.markers.length >= 2) {
