@@ -1,6 +1,5 @@
 const GoogleMaps = require('google-maps');
 const StatsView = require('./stats_view.js');
-
 const GoogleCharts = require('google-charts').GoogleCharts;
 
 const MapView = function (container, elevationContainer, options) {
@@ -25,35 +24,42 @@ const MapView = function (container, elevationContainer, options) {
 };
 
 MapView.prototype.render = function () {
-    GoogleMaps.load((google) => {
-      this.markers = [];
-      this.waypoints = [];
-      this.route = null;
-      this.tempArray = [];
-      this.google = google;
-      this.renderElevationService();
-      this.googleMap = new this.google.maps.Map(this.container, this.options);
-      this.directionsService = new this.google.maps.DirectionsService();
-      this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
-      this.addMarkerOnClick();
-      this.directionsRenderer.setMap(this.googleMap);
-      this.geocoder = new this.google.maps.Geocoder();
-      this.geodesicPoly = new google.maps.Polyline({
-           strokeColor: '#CC0099',
-           strokeOpacity: 1.0,
-           strokeWeight: 3,
-           geodesic: true,
-           map: this.googleMap
-      });
+  GoogleMaps.load((google) => {
+    this.markers = [];
+    this.waypoints = [];
+    this.route = null;
+    this.tempArray = [];
+    this.google = google;
+    this.renderElevationService();
+    this.googleMap = new this.google.maps.Map(this.container, this.options);
+    this.directionsService = new this.google.maps.DirectionsService();
+    this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
+    this.addMarkerOnClick();
+    this.directionsRenderer.setMap(this.googleMap);
+    this.geocoder = new this.google.maps.Geocoder();
+    this.geodesicPoly = new google.maps.Polyline({
+      strokeColor: '#CC0099',
+      strokeOpacity: 1.0,
+      strokeWeight: 3,
+      geodesic: true,
+      map: this.googleMap
     });
+  });
+  const checkbox = document.querySelector('#checkbox')
+  checkbox.addEventListener('change', function() {
+    if(this.checked){
+      console.log('box checked');
+    } else {
+      console.log('box not checked');
+    }
+  })
 }
 
 MapView.prototype.renderElevationService = function () {
   GoogleCharts.load(() => {
-
-  this.googleCharts = GoogleCharts.api;
-  this.elevationChart = new this.googleCharts.visualization.ColumnChart(this.elevationContainer);
-  this.elevationService = new this.google.maps.ElevationService();
+    this.googleCharts = GoogleCharts.api;
+    this.elevationChart = new this.googleCharts.visualization.ColumnChart(this.elevationContainer);
+    this.elevationService = new this.google.maps.ElevationService();
   });
 };
 
@@ -70,20 +76,20 @@ MapView.prototype.codeAddress = function(address) {
 
 MapView.prototype.addMarker = function (coords) {
   if(this.markers.length >= 10) { return };
-    const marker = new this.google.maps.Marker({
-      position: coords,
-      map: this.googleMap,
-    });
-    this.markers.push(marker);
-    this.removeMarkerOnClick(marker);
-  };
+  const marker = new this.google.maps.Marker({
+    position: coords,
+    map: this.googleMap,
+  });
+  this.markers.push(marker);
+  this.removeMarkerOnClick(marker);
+};
 
 MapView.prototype.addMarkerOnClick = function () {
-    this.googleMap.addListener('click', (event) => {
-      this.addMarker(event.latLng);
-      if(this.markers.length < 2) {
-        return;
-      };
+  this.googleMap.addListener('click', (event) => {
+    this.addMarker(event.latLng);
+    if(this.markers.length < 2) {
+      return;
+    };
     const lastMarker = this.markers[this.markers.length-1];
     const start = {
       lat: this.markers[0].position.lat(),
@@ -91,12 +97,12 @@ MapView.prototype.addMarkerOnClick = function () {
     };
     const end = {
       lat: lastMarker.position.lat(),
-        lng: lastMarker.position.lng()
+      lng: lastMarker.position.lng()
     };
     this.getWaypointMarkers();
     this.convertWayPointsToLocation();
     this.calcRoute(start, end, this.waypoints);
-    });
+  });
 };
 
 MapView.prototype.getWaypointMarkers = function () {
@@ -123,66 +129,75 @@ MapView.prototype.convertMarkersToLatLng = function () {
       lng: marker.position.lng()
     })
   })
-  console.log("markers as lat long",this.markersAsLatLng);
 };
 
-  MapView.prototype.updateDirectPath = function () {
-    const path = []
-    this.markers.forEach((marker) => {
-      path.push(marker.getPosition())
-    })
-    this.geodesicPoly.setPath(path);
-  };
+MapView.prototype.updateDirectPath = function () {
+  const path = []
+  this.markers.forEach((marker) => {
+    path.push(marker.getPosition())
+  })
+  this.geodesicPoly.setPath(path);
+};
 
-  MapView.prototype.removeMarkerOnClick = function(marker) {
-    google.maps.event.addListener(marker, 'click', (event) => {
-      this.markers = this.markers.filter(dummyMarker => dummyMarker !== marker);
-      marker.setMap(null);
-    });
-  };
-
-  MapView.prototype.calcRoute = function(start, end, waypoints, inputName) {
-
-    const request = {
-      origin: start,
-      destination: end,
-      waypoints: waypoints,
-      travelMode: 'WALKING'
+MapView.prototype.removeMarkerOnClick = function(marker) {
+  google.maps.event.addListener(marker, 'click', (event) => {
+    this.markers = this.markers.filter(dummyMarker => dummyMarker !== marker);
+    marker.setMap(null);
+    const lastMarker = this.markers[this.markers.length-1];
+    const start = {
+      lat: this.markers[0].position.lat(),
+      lng: this.markers[0].position.lng()
     };
-    this.directionsService.route(request, (result, status) => {
-      if (status === 'OK') {
-        this.directionsRenderer.setDirections(result);
-        this.route = this.getRouteData(result, inputName);
-      };
-      this.updateDirectPath();
-      this.getElevationAlongPath();
-      this.convertWayPointsToLocation();
-      this.convertMarkersToLatLng();
-    });
-  };
-
-  MapView.prototype.getRouteData = function (result, inputName) {
-    const startRouteData = result.routes[0].legs[0];
-    const endRouteData = result.routes[0].legs.slice(-1).pop();
-    const routeData = result.routes[0].legs[0];
-    let totalDistance = this.calculateTotalDistance(result);
-    let totalDuration = this.calculateTotalDuration(result);
-    const routeDataObject = {
-      name: inputName,
-      start: {lat: startRouteData.start_location.lat(), lng: startRouteData.start_location.lng()},
-      end: {lat: endRouteData.end_location.lat(), lng: endRouteData.end_location.lng()},
-      waypoints: this.waypoints,
-      distance: totalDistance,
-      duration: totalDuration
+    const end = {
+      lat: lastMarker.position.lat(),
+      lng: lastMarker.position.lng()
     };
-    const routeStatsContainer = document.querySelector('#stats-list');
-    const statsView = new StatsView(routeStatsContainer);
-    statsView.renderRouteStats(routeDataObject);
-    return routeDataObject;
+    this.getWaypointMarkers();
+    this.convertWayPointsToLocation();
+    this.calcRoute(start, end, this.waypoints);
+  });
+};
+
+MapView.prototype.calcRoute = function(start, end, waypoints, inputName) {
+  const request = {
+    origin: start,
+    destination: end,
+    waypoints: waypoints,
+    travelMode: 'WALKING'
   };
+  this.directionsService.route(request, (result, status) => {
+    if (status === 'OK') {
+      this.directionsRenderer.setDirections(result);
+      this.route = this.getRouteData(result, inputName);
+    };
+    this.updateDirectPath();
+    this.getElevationAlongPath();
+    this.convertWayPointsToLocation();
+    this.convertMarkersToLatLng();
+  });
+};
+
+MapView.prototype.getRouteData = function (result, inputName) {
+  const startRouteData = result.routes[0].legs[0];
+  const endRouteData = result.routes[0].legs.slice(-1).pop();
+  const routeData = result.routes[0].legs[0];
+  let totalDistance = this.calculateTotalDistance(result);
+  let totalDuration = this.calculateTotalDuration(result);
+  const routeDataObject = {
+    name: inputName,
+    start: {lat: startRouteData.start_location.lat(), lng: startRouteData.start_location.lng()},
+    end: {lat: endRouteData.end_location.lat(), lng: endRouteData.end_location.lng()},
+    waypoints: this.waypoints,
+    distance: totalDistance,
+    duration: totalDuration
+  };
+  const routeStatsContainer = document.querySelector('#stats-list');
+  const statsView = new StatsView(routeStatsContainer);
+  statsView.renderRouteStats(routeDataObject);
+  return routeDataObject;
+};
 
 MapView.prototype.getElevationAlongPath = function () {
-  
   this.elevationService.getElevationAlongPath({
     'path': this.markersAsLatLng,
     'samples': 256
@@ -196,16 +211,16 @@ MapView.prototype.plotElevation = function (elevations, status) {
     this.elevationContainer.innerHTML = 'Cannot show elevation: request failed because ' + status;
     return;
   }
-    this.elevationData = new this.googleCharts.visualization.DataTable();
-    this.elevationData.addColumn('string', 'Sample');
-    this.elevationData.addColumn('number', 'Elevation');
-    for (let i = 0; i < elevations.length; i++) {
-      this.elevationData.addRow(['', elevations[i].elevation]);
-    }
-    this.elevationChart.draw(this.elevationData, {
-      height: 150,
-      legend: 'none',
-      titleY: 'Elevation (m)'
+  this.elevationData = new this.googleCharts.visualization.DataTable();
+  this.elevationData.addColumn('string', 'Sample');
+  this.elevationData.addColumn('number', 'Elevation');
+  for (let i = 0; i < elevations.length; i++) {
+    this.elevationData.addRow(['', elevations[i].elevation]);
+  }
+  this.elevationChart.draw(this.elevationData, {
+    height: 150,
+    legend: 'none',
+    titleY: 'Elevation (m)'
   });
 };
 

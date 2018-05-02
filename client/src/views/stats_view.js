@@ -26,7 +26,7 @@ StatsView.prototype.renderRouteStats = function (route) {
     const prettyStartLng = utilities.prettifyLatOrLng(route.start.lng);
     const prettyEndLat = utilities.prettifyLatOrLng(route.end.lat);
     const prettyEndLng = utilities.prettifyLatOrLng(route.end.lng);
-    
+
     startLocation.textContent = 'Start Location: ' + prettyStartLat + ' , ' + prettyStartLng;
     endLocation.textContent = 'End Location: ' + prettyEndLat + ' , ' + prettyEndLng;
     distance.textContent = 'Distance: ' + prettyDistance + ' km';

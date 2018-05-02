@@ -1,10 +1,10 @@
 // const apiKey = AIzaSyBh5r8e1rHqG7LjFJVy3DrR0I4_GMaoPcA
 const MapView = require('./views/map_view.js');
-const ListView = require('./views/wishlist_view.js');
+const ListView = require('./views/list_view.js');
 const Request = require('../../server/request.js');
 const ListData = require('./models/list_data.js');
 const StatsView = require('./views/stats_view.js');
-const Elevation = require('./views/elevation_view.js');
+// const Elevation = require('./views/elevation_view.js');
 
 const appStart = function() {
   const routeStatsContainer = document.querySelector('#stats-list');
@@ -36,8 +36,8 @@ const appStart = function() {
   const elevationContainer = document.querySelector('#elevation-chart');
 
   const handleClearMapClick = function() {
-     mapView.render();
-   };
+    mapView.render();
+  };
 
   const clearMapButton = document.querySelector('#clear-map');
   clearMapButton.addEventListener('click', handleClearMapClick);
@@ -77,14 +77,10 @@ const appStart = function() {
     mapView.codeAddress(inputtedStart);
     // mapView.render();
     // form.reset();
-
   };
-
   form.addEventListener('submit', handleFormSubmit);
   locationForm.addEventListener('submit', handleLocationFormSubmit);
-
 };
-
 
 
 document.addEventListener('DOMContentLoaded', appStart);

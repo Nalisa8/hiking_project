@@ -1,13 +1,9 @@
 
 img {
-background-repeat: no-repeat;
-background-position: top;
-border: 0.1em solid grey;
-margin-bottom: 0em;
-}
-
-#lg2{
-  border: hidden;
+  background-repeat: no-repeat;
+  background-position: top;
+  border: 0.1em solid grey;
+  margin-bottom: 0em;
 }
 
 div#hiking {
@@ -57,7 +53,7 @@ h3 {
   text-align: center;
   padding: 0.5em;
   /* float: inherit; */
-    top: 104px;
+  top: 104px;
 }
 /*///////////////////////////////////////////////*/
 /* styling table wishlist and completed list    */
@@ -71,6 +67,7 @@ h3 {
   width: 700px;
   height: 200px;
 }
+
 #wishlist-container {
   margin-left: inherit;
   margin-right:auto;
@@ -82,7 +79,6 @@ h3 {
   right: 0px;
   background-color:#f4f1e8;
   margin-top: 25px;
-
 }
 
 #completed-container {
@@ -109,10 +105,10 @@ li {
 
 
 p {
-width: 60px;
+  width: 60px;
 }
 
 
 /* #completed-list .distance {
-  background: blue;
+background: blue;
 } */
