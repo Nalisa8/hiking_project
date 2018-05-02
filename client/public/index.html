@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Hiking Tracker</title>
-    <link rel="stylesheet" href="/style/master.css">
-    <script src="./js/bundle.js"></script>
-  </head>
-  <body>
-    <h1>WELCOME TO HIKING STUFF</h1>
-    <h2>Draw Your Route</h2>
-    <section id="route-info">
-      <h3>Route Information</h3>
-      <div id="route-stats">
-        <ul id="stats-list">
+<head>
+  <meta charset="utf-8">
+  <title>Hiking Tracker</title>
+  <link rel="stylesheet" href="/style/master.css">
+  <script src="./js/bundle.js"></script>
+</head>
+<body> <img src="/style/image/hero-hiking1.jpg">
+  <div id="hiking"> WELCOME TO HIKING STUFF</div>
 
-        </ul>
-        <h4>Name Your Route</h4>
-        <form id="route-name" action="index.html" method="post">
-          <label>Name: </label>
-          <input type="text" id="name" required>
-          <button type="submit" name="save-route" id="save-route">Save Route</button>
-        </form>
-      </div>
-    </section>
-    <div id="map"></div>
+  <section id="route-info">
+    <h3>Route Information</h3>
+    <div id="route-stats">
+      <ul id="stats-list">
 
-    <section id="wishlist-container">
-      <h3>WishList Routes</h3>
-      <ul id="wishlist">
       </ul>
-    </section>
+      <h4>Name Your Route</h4>
+      <form id="route-name" action="index.html" method="post">
+        <label>Name: </label>
+        <input type="text" id="name" required>
+        <button type="submit" name="save-route" id="save-route">Save Route</button>
+      </form>
+    </div>
 
-    <section id="completed-container">
-      <h3>Completed Routes</h3>
-      <ul id="completed-list">
-      </ul>
-    </section>
+  </section>
+  <div id="map"></div>
+  <section id="wishlist-container">
+    <h3>WishList Routes</h3>
+    <ul id="wishlist">
+    </ul>
+  </section>
 
-  </body>
+  <section id="completed-container">
+    <h3>Completed Routes</h3>
+    <ul id="completed-list">
+    </ul>
+  </section>
+
+</body>
 </html>
