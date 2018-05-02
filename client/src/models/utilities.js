@@ -3,8 +3,10 @@ const Utilities = function () {
 }
 
 Utilities.prototype.prettifyDistance = function (route) {
-  const prettyRoute = route.distance/1000;
-  return this.precisionRound(prettyRoute, 1)
+  const routeInKm = route.distance/1000;
+  const midRoute = this.precisionRound(routeInKm, 1);
+  const finalRoute = midRoute + " km";
+  return finalRoute;
 };
 
 Utilities.prototype.prettifyLatOrLng = function (number) {

@@ -21,15 +21,19 @@ const MapView = function (container, elevationContainer, options) {
   this.geodesicPoly = null;
   this.waypoints = [];
   this.tempArray = [];
+  this.markersAsLatLng = [];
 };
 
 MapView.prototype.render = function () {
     GoogleMaps.load((google) => {
+      this.markers = [];
+      this.waypoints = [];
+      this.route = null;
+      this.tempArray = [];
       this.google = google;
       this.renderElevationService();
       this.googleMap = new this.google.maps.Map(this.container, this.options);
       this.directionsService = new this.google.maps.DirectionsService();
-      console.log("In render log",this.directionsService);
       this.directionsRenderer = new this.google.maps.DirectionsRenderer({suppressMarkers: true});
       this.addMarkerOnClick();
       this.directionsRenderer.setMap(this.googleMap);
@@ -65,13 +69,9 @@ MapView.prototype.codeAddress = function(address) {
 };
 
 MapView.prototype.addMarker = function (coords) {
-  // if(this.markers.length >= 2) {
-  //   return;}
     const marker = new this.google.maps.Marker({
       position: coords,
       map: this.googleMap,
-      // draggable: true
-      // COULD MAKE MARKERS DRAGGABLE. NEED EVENT LISTENER ON THIS THOUGH TO RECALC ROUTE.
     });
     this.markers.push(marker);
     this.removeMarkerOnClick(marker);
@@ -94,7 +94,7 @@ MapView.prototype.addMarkerOnClick = function () {
         },
         this.waypoints
       );
-      this.getElevationAlongPath();
+
     });
 };
 
@@ -105,13 +105,23 @@ MapView.prototype.getWaypointMarkers = function () {
   this.tempArray.shift();
 };
 
-MapView.prototype.convertMarkersToLatLng = function () {
+MapView.prototype.convertWayPointsToLocation = function () {
   this.waypoints = [];
   this.tempArray.map((marker) => {
     this.waypoints.push({
       location: `${marker.position.lat()}, ${marker.position.lng()}`
     })
   });
+};
+
+MapView.prototype.convertMarkersToLatLng = function () {
+  this.markersAsLatLng = [];
+  this.markers.forEach((marker) => {
+    this.markersAsLatLng.push({
+      lat: marker.position.lat(),
+      lng: marker.position.lng()
+    })
+  })
 };
 
 
@@ -132,7 +142,7 @@ MapView.prototype.convertMarkersToLatLng = function () {
 
   MapView.prototype.calcRoute = function(start, end, waypoints, inputName) {
     this.getWaypointMarkers();
-    this.convertMarkersToLatLng();
+    this.convertWayPointsToLocation();
     const request = {
       origin: start,
       destination: end,
@@ -145,7 +155,9 @@ MapView.prototype.convertMarkersToLatLng = function () {
         this.route = this.getRouteData(result, inputName);
       };
       this.updateDirectPath();
-      this.convertWaypointsToLatLng();
+      this.getElevationAlongPath();
+      this.convertWayPointsToLocation();
+      this.convertMarkersToLatLng();
     });
   };
 
@@ -212,9 +224,4 @@ MapView.prototype.calculateTotalDuration = function (result) {
   return totalDuration;
 };
 
-
-MapView.prototype.convertWaypointsToLatLng = function () {
-
-};
-
-  module.exports = MapView;
+module.exports = MapView;

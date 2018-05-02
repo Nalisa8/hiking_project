@@ -1,9 +1,11 @@
 const ListData = require('../models/list_data.js');
 const Request = require('../../../server/request.js');
 const MapView = require('./map_view.js');
+const Utilities = require('../models/utilities.js')
 
 const wishlistGetter = new ListData('/wishlist');
 const completedListGetter = new ListData('/completed');
+const utilities = new Utilities;
 
 const ListView = function (containerOne, containerTwo) {
   this.wishlistContainer = containerOne;
@@ -11,12 +13,6 @@ const ListView = function (containerOne, containerTwo) {
   this.wishlistData = null;
   this.completedData = null;
 };
-
-const precisionRound = function(number, precision) {
-  const factor = Math.pow(10, precision);
-  return Math.round(number * factor)/factor;
-};
-
 
 ListView.prototype.renderBothLists = function() {
   wishlistGetter.getData((data) => {
@@ -52,20 +48,10 @@ ListView.prototype.onViewRouteButtonClicked = function(completeButton) {
 
     const mapView = new MapView(mapContainer, elevationContainer, mapOptions);
     mapView.render();
-
-    console.log("post render log", mapView.directionsService);
     mapView.calcRoute(result.start, result.end, result.waypoints, result.name);
     mapView.addMarker(result.start);
     mapView.addMarker(result.end);
-
-
-    // result.waypoints.forEach((waypoint) => {
-    //   mapView.addMarker(waypoint)
-    // })
   });
-
-
-
 };
 
 ListView.prototype.onDeleteButtonClicked = function(deleteButton) {
@@ -121,23 +107,26 @@ ListView.prototype.renderDetail = function (routeObj, routeItem) {
   const name = document.createElement('p');
   name.textContent = routeObj.name;
 
+  console.log(routeObj.distance);
+
   const startLat = document.createElement('p');
-  startLat.textContent = precisionRound(routeObj.start.lat, 3);
+
+  startLat.textContent = utilities.prettifyLatOrLng(routeObj.start.lat);
 
   const startLng = document.createElement('p');
-  startLng.textContent = precisionRound(routeObj.start.lng, 3);
+  startLng.textContent = utilities.prettifyLatOrLng(routeObj.start.lng, 3);
 
   const endLat = document.createElement('p');
-  endLat.textContent = precisionRound(routeObj.end.lat, 3);
+  endLat.textContent = utilities.prettifyLatOrLng(routeObj.end.lat, 3);
 
   const endLng = document.createElement('p');
-  endLng.textContent = precisionRound(routeObj.end.lng, 3);
+  endLng.textContent = utilities.prettifyLatOrLng(routeObj.end.lng, 3);
 
   const distance = document.createElement('p');
-  distance.textContent = routeObj.distance;
+  distance.textContent = utilities.prettifyDistance(routeObj);
 
   const duration = document.createElement('p');
-  duration.textContent = routeObj.duration;
+  duration.textContent = utilities.prettifyDuration(routeObj);
 
   routeItem.appendChild(viewRouteButton);
   routeItem.appendChild(deleteButton);

@@ -35,6 +35,13 @@ const appStart = function() {
   const mapContainer = document.querySelector('#map');
   const elevationContainer = document.querySelector('#elevation-chart');
 
+  const handleClearMapClick = function() {
+     mapView.render();
+   };
+
+  const clearMapButton = document.querySelector('#clear-map');
+  clearMapButton.addEventListener('click', handleClearMapClick);
+
   const mapOptions = {
     zoom: 7,
     center: {lat: 56.4907, lng: -4.2026},
@@ -77,5 +84,7 @@ const appStart = function() {
   locationForm.addEventListener('submit', handleLocationFormSubmit);
 
 };
+
+
 
 document.addEventListener('DOMContentLoaded', appStart);
