@@ -4,7 +4,6 @@ const Request = require('../../../server/request.js');
 const wishlistGetter = new ListData('/wishlist');
 const completedListGetter = new ListData('/completed');
 
-
 const ListView = function (containerOne, containerTwo) {
   this.wishlistContainer = containerOne;
   this.completedContainer = containerTwo;

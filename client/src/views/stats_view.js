@@ -10,7 +10,6 @@ StatsView.prototype.renderRouteStats = function (route) {
   const endLocation = document.createElement('p');
   const distance = document.createElement('p');
   const duration = document.createElement('p');
-  console.log(route);
 
   if (route === undefined) {
     startLocation.textContent = 'Start Location: ';
@@ -20,7 +19,6 @@ StatsView.prototype.renderRouteStats = function (route) {
   } else {
     const prettyDistance = this.prettifyDistance(route);
     const prettyDuration = this.prettifyDuration(route);
-    console.log(prettyDuration);
     startLocation.textContent = 'Start Location: ' + route.start.lat + ' , ' + route.start.lng;
     endLocation.textContent = 'End Location: ' + route.end.lat + ' , ' + route.end.lng;;
     distance.textContent = 'Distance: ' + prettyDistance + ' km';
@@ -50,8 +48,6 @@ StatsView.prototype.prettifyDuration = function (route) {
   const hoursDisplay = hours > 0 ? hours + (hours== 1 ? " hour, " : " hours, ") : "";
   const minutesDisplay = minutes > 0 ? minutes + (minutes == 1 ? " minute " : " minutes ") : "";
   return hoursDisplay + minutesDisplay;
-
-
 };
 
 module.exports = StatsView;

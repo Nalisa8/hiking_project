@@ -120,9 +120,9 @@ MapView.prototype.convertMarkersToLatLng = function () {
     const startRouteData = result.routes[0].legs[0];
     const endRouteData = result.routes[0].legs.slice(-1).pop();
     const routeData = result.routes[0].legs[0];
+    console.log(result);
     let totalDistance = this.calculateTotalDistance(result);
     let totalDuration = this.calculateTotalDuration(result);
-    console.log("total druation", totalDuration);
     const routeDataObject = {
       name: inputName,
       start: {lat: startRouteData.start_location.lat(), lng: startRouteData.start_location.lng()},
@@ -132,7 +132,6 @@ MapView.prototype.convertMarkersToLatLng = function () {
     };
     const routeStatsContainer = document.querySelector('#stats-list');
     const statsView = new StatsView(routeStatsContainer);
-    console.log("object", routeDataObject);
     statsView.renderRouteStats(routeDataObject);
     return routeDataObject;
   };
