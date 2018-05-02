@@ -7,6 +7,10 @@ Utilities.prototype.prettifyDistance = function (route) {
   return this.precisionRound(prettyRoute, 1)
 };
 
+Utilities.prototype.prettifyLatOrLng = function (number) {
+  return this.precisionRound(number, 3)
+};
+
 Utilities.prototype.precisionRound = function (number, precision) {
   const factor = Math.pow(10, precision);
   return Math.round(number * factor) / factor;

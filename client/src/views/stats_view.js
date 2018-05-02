@@ -22,8 +22,13 @@ StatsView.prototype.renderRouteStats = function (route) {
   } else {
     const prettyDistance = utilities.prettifyDistance(route);
     const prettyDuration = utilities.prettifyDuration(route);
-    startLocation.textContent = 'Start Location: ' + route.start.lat + ' , ' + route.start.lng;
-    endLocation.textContent = 'End Location: ' + route.end.lat + ' , ' + route.end.lng;;
+    const prettyStartLat = utilities.prettifyLatOrLng(route.start.lat);
+    const prettyStartLng = utilities.prettifyLatOrLng(route.start.lng);
+    const prettyEndLat = utilities.prettifyLatOrLng(route.end.lat);
+    const prettyEndLng = utilities.prettifyLatOrLng(route.end.lng);
+    
+    startLocation.textContent = 'Start Location: ' + prettyStartLat + ' , ' + prettyStartLng;
+    endLocation.textContent = 'End Location: ' + prettyEndLat + ' , ' + prettyEndLng;
     distance.textContent = 'Distance: ' + prettyDistance + ' km';
     duration.textContent = 'Expected Duration: ' + prettyDuration;
   };
@@ -33,7 +38,5 @@ StatsView.prototype.renderRouteStats = function (route) {
   this.container.appendChild(distance);
   this.container.appendChild(duration);
 };
-
-
 
 module.exports = StatsView;
