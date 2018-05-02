@@ -12,6 +12,8 @@ const MapView = function (container, options) {
   this.markers = [];
   this.route = null;
   this.geodesicPoly = null;
+  this.waypoints = [];
+  this.tempArray = [];
 };
 
 MapView.prototype.render = function () {
@@ -29,42 +31,62 @@ MapView.prototype.render = function () {
          strokeWeight: 3,
          geodesic: true,
          map: this.googleMap
-       });
+    });
   });
 };
 
 MapView.prototype.addMarker = function (coords) {
-  if(this.markers.length >= 2) {
-    return;}
+  // if(this.markers.length >= 2) {
+  //   return;}
     const marker = new this.google.maps.Marker({
       position: coords,
-      map: this.googleMap
+      map: this.googleMap,
+      // draggable: true
+      // COULD MAKE MARKERS DRAGGABLE. NEED EVENT LISTENER ON THIS THOUGH TO RECALC ROUTE.
     });
     this.markers.push(marker);
     this.removeMarkerOnClick(marker);
-    this.markers.forEach((marker) => console.log(marker));
   };
 
-  MapView.prototype.addMarkerOnClick = function () {
+MapView.prototype.addMarkerOnClick = function () {
     this.googleMap.addListener('click', (event) => {
       this.addMarker(event.latLng);
       if(this.markers.length < 2) {
         return;
       };
 
+    const lastMarker = this.markers[this.markers.length-1];
       this.calcRoute(
         { lat: this.markers[0].position.lat(),
           lng: this.markers[0].position.lng()
         },
-        { lat: this.markers[1].position.lat(),
-          lng: this.markers[1].position.lng()
+        { lat: lastMarker.position.lat(),
+          lng: lastMarker.position.lng()
         }
       );
     });
-  };
+};
+
+MapView.prototype.getWaypointMarkers = function () {
+  this.tempArray = [];
+  this.markers.map((marker) => {this.tempArray.push(marker)});
+  this.tempArray.splice(-1, 1);
+  this.tempArray.shift();
+};
+
+MapView.prototype.convertMarkersToLatLng = function () {
+  this.waypoints = [];
+  this.tempArray.map((marker) => {
+    this.waypoints.push({
+      location: `${marker.position.lat()}, ${marker.position.lng()}`,
+      stopover: true
+    })
+  });
+};
+
 
   MapView.prototype.update = function () {
-    const path = [this.markers[0].getPosition(), this.markers[1].getPosition()];
+    const path = [this.markers[0].getPosition(), this.markers[this.markers.length-1].getPosition()];
     this.geodesicPoly.setPath(path);
   };
 
@@ -76,9 +98,12 @@ MapView.prototype.addMarker = function (coords) {
   };
 
   MapView.prototype.calcRoute = function(start, end, inputName) {
+    this.getWaypointMarkers();
+    this.convertMarkersToLatLng();
     const request = {
       origin: start,
       destination: end,
+      waypoints: this.waypoints,
       travelMode: 'WALKING'
     };
     this.directionsService.route(request, (result, status) => {
@@ -92,18 +117,40 @@ MapView.prototype.addMarker = function (coords) {
 
 
   MapView.prototype.getRouteData = function (result, inputName) {
+    const startRouteData = result.routes[0].legs[0];
+    const endRouteData = result.routes[0].legs.slice(-1).pop();
     const routeData = result.routes[0].legs[0];
+    let totalDistance = this.calculateTotalDistance(result);
+    let totalDuration = this.calculateTotalDuration(result);
+    console.log("total druation", totalDuration);
     const routeDataObject = {
       name: inputName,
-      start: {lat: routeData.start_location.lat(), lng: routeData.start_location.lng()},
-      end: {lat: routeData.end_location.lat(), lng: routeData.end_location.lng()},
-      distance: routeData.distance.text,
-      duration: routeData.duration.text
+      start: {lat: startRouteData.start_location.lat(), lng: startRouteData.start_location.lng()},
+      end: {lat: endRouteData.end_location.lat(), lng: endRouteData.end_location.lng()},
+      distance: totalDistance,
+      duration: totalDuration
     };
     const routeStatsContainer = document.querySelector('#stats-list');
     const statsView = new StatsView(routeStatsContainer);
+    console.log("object", routeDataObject);
     statsView.renderRouteStats(routeDataObject);
     return routeDataObject;
+  };
+
+  MapView.prototype.calculateTotalDistance = function (result) {
+    let totalDistance = 0;
+    result.routes[0].legs.forEach((leg) => {
+      totalDistance += (leg.distance.value);
+    });
+    return totalDistance;
+  };
+
+  MapView.prototype.calculateTotalDuration = function (result) {
+    let totalDuration = 0;
+    result.routes[0].legs.forEach((leg) => {
+      totalDuration += (leg.duration.value);
+    });
+    return totalDuration;
   };
 
   module.exports = MapView;

@@ -5,7 +5,7 @@ const StatsView = function(container) {
 
 StatsView.prototype.renderRouteStats = function (route) {
   this.container.innerHTML ='';
-  
+
   const startLocation = document.createElement('p');
   const endLocation = document.createElement('p');
   const distance = document.createElement('p');
@@ -17,6 +17,7 @@ StatsView.prototype.renderRouteStats = function (route) {
     distance.textContent = 'Distance: ';
     duration.textContent = 'Expected Duration: ';
   } else {
+    console.log(route);
     startLocation.textContent = 'Start Location: ' + route.start.lat + ' , ' + route.start.lng;
     endLocation.textContent = 'End Location: ' + route.end.lat + ' , ' + route.end.lng;;
     distance.textContent = 'Distance: ' + route.distance;
