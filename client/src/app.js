@@ -37,6 +37,7 @@ const appStart = function() {
 
   const handleClearMapClick = function() {
     mapView.render();
+    statsView.renderRouteStats();
   };
 
   const clearMapButton = document.querySelector('#clear-map');

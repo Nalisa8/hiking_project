@@ -46,13 +46,7 @@ MapView.prototype.render = function () {
     });
   });
   const checkbox = document.querySelector('#checkbox')
-  checkbox.addEventListener('change', function() {
-    if(this.checked){
-      console.log('box checked');
-    } else {
-      console.log('box not checked');
-    }
-  })
+  checkbox.addEventListener('change', this.checkStatusAndDrawAccordingly)
 }
 
 MapView.prototype.renderElevationService = function () {
@@ -62,6 +56,14 @@ MapView.prototype.renderElevationService = function () {
     this.elevationService = new this.google.maps.ElevationService();
   });
 };
+
+MapView.prototype.checkStatusAndDrawAccordingly = function (start, end, waypoints, inputName) {
+    if(checkbox.checked) {
+      this.calcRoute(start, end, waypoints, inputName);
+    } else if (!checkbox.checked) {
+      this.updateDirectPath();
+    }
+  }
 
 MapView.prototype.codeAddress = function(address) {
   this.geocoder.geocode({'address': address}, (results, status) => {
@@ -101,7 +103,8 @@ MapView.prototype.addMarkerOnClick = function () {
     };
     this.getWaypointMarkers();
     this.convertWayPointsToLocation();
-    this.calcRoute(start, end, this.waypoints);
+    // this.calcRoute(start, end, this.waypoints);
+    this.checkStatusAndDrawAccordingly(start, end, this.waypoints)
   });
 };
 
@@ -133,11 +136,25 @@ MapView.prototype.convertMarkersToLatLng = function () {
 
 MapView.prototype.updateDirectPath = function () {
   const path = []
+  // const distance = 0;
   this.markers.forEach((marker) => {
     path.push(marker.getPosition())
+    // distance += this.calculateDirectDistance(marker);
   })
   this.geodesicPoly.setPath(path);
 };
+
+// MapView.prototype.calculateDirectDistance = function (marker) {
+//   const nextItem = this.getNextItemInArray(marker);
+//   this.googleMap.geometry.spherical.computeDistanceBetween(marker, nextItem);
+// };
+//
+// MapView.prototype.getNextItemInArray = function (marker) {
+//   const index = this.markersAsLatLng.indexOf(marker);
+//   if(index >= 0 && index < this.markersAsLatLng.length - 1){
+//   const nextItem = this.markersAsLatLng[index + 1];
+//   console.log(nextItem)};
+// };
 
 MapView.prototype.removeMarkerOnClick = function(marker) {
   google.maps.event.addListener(marker, 'click', (event) => {
@@ -154,7 +171,8 @@ MapView.prototype.removeMarkerOnClick = function(marker) {
     };
     this.getWaypointMarkers();
     this.convertWayPointsToLocation();
-    this.calcRoute(start, end, this.waypoints);
+    // this.calcRoute(start, end, this.waypoints);
+    this.checkStatusAndDrawAccordingly(start, end, this.waypoints)
   });
 };
 
@@ -170,7 +188,7 @@ MapView.prototype.calcRoute = function(start, end, waypoints, inputName) {
       this.directionsRenderer.setDirections(result);
       this.route = this.getRouteData(result, inputName);
     };
-    this.updateDirectPath();
+    // this.updateDirectPath();
     this.getElevationAlongPath();
     this.convertWayPointsToLocation();
     this.convertMarkersToLatLng();

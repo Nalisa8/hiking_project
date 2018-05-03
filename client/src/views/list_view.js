@@ -38,14 +38,12 @@ ListView.prototype.onViewRouteButtonClicked = function(completeButton) {
   const request = new Request(`/${completeButton.path[2].id}/${completeButton.target.value}`);
   request.get((result) => {
     const mapContainer = document.querySelector('#map');
-
     const mapOptions = {
       zoom: 7,
       center: {lat: 56.4907, lng: -4.2026},
       mapTypeId: 'terrain'
     };
     const elevationContainer = document.querySelector('#elevation-chart');
-
     const mapView = new MapView(mapContainer, elevationContainer, mapOptions);
     mapView.render();
     mapView.calcRoute(result.start, result.end, result.waypoints, result.name);
