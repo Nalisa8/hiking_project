@@ -1,13 +1,18 @@
+body {
+  font-family: Verdana;
+}
+
 /* Header */
 
 div#hiking {
   position: absolute; top: 45px;
   font-style: normal;
-  font-family: "Didot", cursive;
-  font-size: 50px;
+  font-family: Verdana;
+  font-size: 70px;
   padding: 1em;
   color: white;
   margin-bottom: 2em;
+  width: 50vw;
 }
 
 /* Map & elevation chart & route stats */
@@ -29,10 +34,25 @@ div#hiking {
   justify-content: space-between;
 }
 
+#route-info {
+  border: 1px solid black;
+  width: 650px;
+  padding-left: 50px;
+  padding-top: 20px;
+  margin-right: 5px;
+  font-size: 20px;
+  background-color: rgb(218, 218, 209);
+}
+
 /* Route tables */
 
-#wishlist-container #completed-container {
-  width: 100vw;
+#wishlist-container, #completed-container {
+  width: 1375px;
+  border: 1px solid black;
+  margin-top: 5px;
+  padding-left: 15px;
+  padding: 5px;
+  background-color: rgb(218, 218, 209);
 }
 
 ul li{
@@ -51,4 +71,13 @@ li p{
 
 li button {
   width: 100px;
+}
+
+button {
+  background-color: rgb(161, 190, 153);
+  border-radius: 5px;
+}
+
+.title {
+  font-weight: bold;
 }
