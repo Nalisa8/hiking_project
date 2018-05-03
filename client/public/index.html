@@ -3,52 +3,88 @@
 <head>
   <meta charset="utf-8">
   <title>Hiking Tracker</title>
-  <link rel="stylesheet" href="/style/master.css">
+  <link rel="stylesheet" href="/style/main.css">
   <script src="./js/bundle.js"></script>
 </head>
 <body> <img src="/style/image/hero-hiking1.jpg">
   <div id="hiking"> WELCOME TO HIKING STUFF</div>
 
-  <section id="route-info">
+<div id="top-section">
+
+  <div id="route-info">
     <h3>Route Information</h3>
+    <button type="button" id="clear-map">Clear Map</button>
     <input type="checkbox" id="checkbox" checked>
     <label for="checkbox">Follow Paths</label>
     <div id="route-stats">
       <ul id="stats-list">
 
-        </ul>
-        <h4>Name Your Route</h4>
-        <form id="route-name" action="index.html" method="post">
-          <label>Name: </label>
-          <input type="text" id="name" required>
-          <button type="submit" name="save-route" id="save-route">Save Route</button>
-        </form>
+      </ul>
+      <h4>Name Your Route</h4>
+      <form id="route-name" action="index.html" method="post">
+        <label>Name: </label>
+        <input type="text" id="name" required>
+        <button type="submit" name="save-route" id="save-route">Save Route</button>
+      </form>
 
-        <h4>Find Start Location</h4>
-        <form id="find-location" action="index.html" method="post">
-          <label>Location: </label>
-          <input type="text" id="start" required>
-          <button type="submit" name="start" id="find-start">Find Start</button>
-        </form>
-      </div>
-    </section>
-    <button type="button" id="clear-map">Clear Data</button>
+      <h4>Find Start Location</h4>
+      <form id="find-location" action="index.html" method="post">
+        <label>Location: </label>
+        <input type="text" id="start" required>
+        <button type="submit" name="start" id="find-start">Find Start</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="map-wrapper">
     <div id="map"></div>
     <div id="elevation-chart"></div>
-      </ul>
+  </div>
+</div>
 
-  </section>
-  <section id="wishlist-container">
-    <h3>WishList Routes</h3>
-    <ul id="wishlist">
-    </ul>
-  </section>
+<div id="route-tables">
 
-  <section id="completed-container">
-    <h3>Completed Routes</h3>
-    <ul id="completed">
+
+<div id="wishlist-container">
+  <h3>WishList Routes</h3>
+  <ul>
+  <li>
+  <p>View Route</p>
+  <p>Delete</p>
+  <p>Completed</p>
+  <p>Route Name</p>
+  <p>Start Lat</p>
+  <p>Start Long</p>
+  <p>End Lat</p>
+  <p>End Long</p>
+  <p>KMs</p>
+  <p>Time</p>
+  </li>
     </ul>
-  </section>
+  <ul id="wishlist">
+  </ul>
+</div>
+
+<div id="completed-container">
+  <h3>Completed Routes</h3>
+  <ul>
+  <li>
+  <p>View Route</p>
+  <p>Delete</p>
+  <p></p>
+  <p>Route Name</p>
+  <p>Start Lat</p>
+  <p>Start Long</p>
+  <p>End Lat</p>
+  <p>End Long</p>
+  <p>Distance</p>
+  <p>Time</p>
+  </li>
+    </ul>
+  <ul id="completed">
+  </ul>
+</div>
+</div>
 
 </body>
 </html>

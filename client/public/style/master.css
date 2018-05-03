@@ -1,5 +1,5 @@
 
-img {
+/* img {
   background-repeat: no-repeat;
   background-position: top;
   border: 0.1em solid grey;
@@ -14,7 +14,7 @@ div#hiking {
   padding: 1em;
   color: white;
   margin-bottom: 2em;
-}
+} */
 
 #map {
   border: 0.1em solid black;
@@ -58,15 +58,15 @@ h3 {
 /*///////////////////////////////////////////////*/
 /* styling table wishlist and completed list    */
 
-#completed .completed-button {
+/* #completed .completed-button {
   visibility: hidden;
-}
+} */
 
-#elevation-chart {
+/* #elevation-chart {
   border: 1px solid black;
   width: 700px;
   height: 200px;
-}
+} */
 
 #wishlist-container {
   margin-left: inherit;

@@ -1,0 +1,54 @@
+/* Header */
+
+div#hiking {
+  position: absolute; top: 45px;
+  font-style: normal;
+  font-family: "Didot", cursive;
+  font-size: 50px;
+  padding: 1em;
+  color: white;
+  margin-bottom: 2em;
+}
+
+/* Map & elevation chart & route stats */
+
+#map {
+  border: 0.1em solid black;
+  width: 700px;
+  height: 500px;
+}
+
+#elevation-chart {
+  border: 1px solid black;
+  width: 700px;
+  height: 200px;
+}
+
+#top-section{
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Route tables */
+
+#wishlist-container #completed-container {
+  width: 100vw;
+}
+
+ul li{
+  list-style: none;
+}
+
+li p{
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+}
+
+#completed .completed-button {
+  visibility: hidden;
+}
+
+li button {
+  width: 100px;
+}
